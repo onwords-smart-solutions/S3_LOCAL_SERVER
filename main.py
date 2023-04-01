@@ -102,7 +102,7 @@ async def createDevice(devices: Devices, request: Request):
 
 
 @app.post("/device/details", tags=["Devices"])
-async def createDeviceDetails(devices: Devices_details, request: Request):
+async def createDeviceDetails(devices: DeviceDetails, request: Request):
     try:
         device_detail_collections.insert_one(
             {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
@@ -362,9 +362,13 @@ async def getLedDetails(devices: Led_details, request: Request):
 @app.post("/leds/log", tags=["LED"])
 async def getLedLog(devices: Log, request: Request):
     try:
-        led_details_log_collections.insert_one(
-            {"_id": time.time(), "device_id": devices.device_id, "status": devices.status,
-             "timestamp": devices.timestamp, "updated_by": devices.updated_by})
+        led_details_log_collections.insert_one({
+            "_id": time.time(),
+            "device_id": devices.device_id,
+            "status": devices.status,
+            "timestamp": devices.timestamp,
+            "updated_by": devices.updated_by
+        })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
         return {"msg": {f"id already exist in devices log, try using other id"}}
@@ -435,9 +439,13 @@ async def getMechanicsLog():
 @app.post("/mechanic/details", tags=["Mechanics"])
 async def createMechanicsDetails(devices: Mechanics_details, request: Request):
     try:
-        mechanics_details_collections.insert_one(
-            {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+        mechanics_details_collections.insert_one({
+            "_id": devices.id,
+            "name": devices.device_name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = mechanics_details_collections.find()
@@ -450,9 +458,13 @@ async def createMechanicsDetails(devices: Mechanics_details, request: Request):
 @app.post("/mechanic/log", tags=["Mechanics"])
 async def createMechanicsLog(devices: Log, request: Request):
     try:
-        mechanics_details_log_collections.insert_one(
-            {"_id": time.time(), "device_id": devices.device_id, "status": devices.status,
-             "timestamp": devices.timestamp, "updated_by": devices.updated_by})
+        mechanics_details_log_collections.insert_one({
+            "_id": time.time(),
+            "device_id": devices.device_id,
+            "status": devices.status,
+            "timestamp": devices.timestamp,
+            "updated_by": devices.updated_by
+        })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
         return {"msg": {f"id already exist in devices log, try using other id"}}
@@ -795,17 +807,15 @@ async def getRoom():
 @app.post("/room", description="Create a new room", tags=["Rooms"])
 async def createRoom(room: Rooms, request: Request):
     try:
-        room_collections.insert_one(
-            {
-                "_id": room.id,
-                "name": room.name,
-                "device_id": room.devices,
-                "fan_id": room.fan,
-                "led_id": room.led,
-                "mechanics_id": room.mechanics,
-                "motion_sensor_id": room.motion_sensor
-            }
-        )
+        room_collections.insert_one({
+            "_id": room.id,
+            "name": room.name,
+            "device_id": room.devices,
+            "fan_id": room.fan,
+            "led_id": room.led,
+            "mechanics_id": room.mechanics,
+            "motion_sensor_id": room.motion_sensor
+        })
         return {"msg": "created successfully", "created_data": room, "client": request.client}
     except:
         documents = device_collections.find()

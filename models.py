@@ -5,13 +5,7 @@ class Devices(BaseModel):
     id: int
     status: bool
 
-
-class Log(BaseModel):
-    status: str
-    timestamp: int
-
-
-class Devices_details(BaseModel):
+class DeviceDetails(BaseModel):
     id: int
     device_id: int
     device_name: str
@@ -31,7 +25,6 @@ class Fan_details(BaseModel):
     room: str
     type: str
 
-
 class Mechanics_details(BaseModel):
     id: int
     device_id: int
@@ -39,15 +32,12 @@ class Mechanics_details(BaseModel):
     room: str
     type: str
 
-
 class Led_details(BaseModel):
     id: int
     device_id: int
     device_name: str
     room: str
     type: str
-    # log:og
-
 
 class Log(BaseModel):
     device_id: int
@@ -55,10 +45,8 @@ class Log(BaseModel):
     timestamp: int
     updated_by: str
 
-
 class Devices_put(BaseModel):
     status: bool
-
 
 class Led(BaseModel):
     id: int
@@ -68,7 +56,6 @@ class Led(BaseModel):
     G: str
     B: str
 
-
 class Led_put(BaseModel):
     brightness: str
     status: bool
@@ -76,17 +63,14 @@ class Led_put(BaseModel):
     G: str
     B: str
 
-
 class Fan(BaseModel):
     id: int
     status: bool
     speed: int
 
-
 class Fan_put(BaseModel):
     status: bool
     speed: int
-
 
 class Temperature(BaseModel):
     device_id: int
@@ -95,21 +79,17 @@ class Temperature(BaseModel):
     humidity: float
     timestamp: int
 
-
 class Mechanics(BaseModel):
     id: int
     values: str
-
 
 class Mechanics_put(BaseModel):
     id: int
     values: str
 
-
 class Wta(BaseModel):
     id: int
     level: int
-
 
 class Eb(BaseModel):
     id: int
@@ -119,7 +99,6 @@ class Eb(BaseModel):
     ups_voltage: int
     ups_AMP: int
     ups_battery_percentage: int
-
 
 class Eb_put(BaseModel):
     voltage: int
@@ -157,7 +136,6 @@ class Eb3(BaseModel):
     ups_AMP: int
     ups_battery_percentage: int
 
-
 class Eb3_put(BaseModel):
     R_voltage: int
     Y_voltage: int
@@ -193,7 +171,6 @@ class Rooms(BaseModel):
     mechanics: list[int]
     motion_sensor: list[int]
 
-
 class MotionSensor(BaseModel):
     id: int
     ss: bool
@@ -201,13 +178,11 @@ class MotionSensor(BaseModel):
     off_s: bool
     time: int
 
-
 class MotionSensor_Put(BaseModel):
     ss: bool
     on_s: bool
     off_s: bool
     time: int
-    
 
 class MotionSensor_details(BaseModel):
     id: int
@@ -215,7 +190,6 @@ class MotionSensor_details(BaseModel):
     device_name: str
     room: str
     type: str
-
 
 class MotionSensor_details_put(BaseModel):
     device_id: int
