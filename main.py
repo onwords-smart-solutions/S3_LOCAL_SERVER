@@ -7,88 +7,15 @@ import uvicorn
 app = FastAPI(title="Onwords Local Smart Home Server", docs_url="/admin", redoc_url="/document")
 
 
-@app.get("/device", tags=["Devices"])
+@app.get("/device", tags=["Devices"], description="Get all Devices", summary="Get all Devices")
 async def getAllDevices():
     device_list = []
     documents = device_collections.find()
-    print('inside try')
-    print('doc ', documents)
     for document in documents:
         device_list.append(document)
     return device_list
 
-
-@app.get("/device/details", tags=["Devices"])
-async def getAllDeviceDetails():
-    device_list = []
-    documents = device_detail_collections.find()
-    for document in documents:
-        device_list.append(document)
-    return device_list
-
-
-@app.get("/device/log", tags=["Devices"])
-async def getAllDeviceLog():
-    device_list = []
-    documents = device_details_log_collections.find()
-    for x in documents:
-        device_list.append(x)
-    return device_list
-
-
-@app.get("/device/boardlog", tags=["Devices"])
-async def getAllBoardLog():
-    device_list = []
-    documents = device_board_log_collections.find()
-    for x in documents:
-        device_list.append(x)
-    return device_list
-
-
-@app.get("/device/{item_id}", tags=["Devices"])
-async def getDeviceById(item_id: int):
-    return device_collections.find_one({"_id": item_id})
-
-
-@app.get("/device/details/{item_id}", tags=["Devices"])
-async def getDeviceDetailsById(item_id: int):
-    return device_detail_collections.find_one({"_id": item_id})
-
-
-@app.put("/device/details/{item_id}", tags=["Devices"])
-def updateDeviceDetailsById(device: Devices_details_Put, item_id: int):
-    device_detail_collections.update_one(
-        {"_id": item_id},
-        {"$set":{
-            "name": device.name,
-            "room": device.room,
-            "device_id": device.device_id,
-            "type": device.type
-            }
-        }
-    )
-    return {"msg": f"updated device id {item_id} to {device}"}
-
-
-@app.delete("/device/details/{item_id}", tags=["Devices"])
-async def deleteDeviceDetailsById(item_id: int):
-    device_detail_collections.delete_one({"_id": item_id})
-    return {"msg": f"Successfully deleted item in {item_id}"}
-
-
-@app.delete("/device/{item_id}", tags=["Devices"])
-async def deleteDeviceById(item_id: int):
-    device_collections.delete_one({"_id": item_id})
-    return {"msg": f"Successfully deleted item in {item_id}"}
-
-
-@app.put("/device/{item_id}", tags=["Devices"])
-def updateDeviceById(device: Devices_put, item_id: int):
-    device_collections.update_one({"_id": item_id}, {"$set": {"status": device.status}})
-    return {"msg": f"updated device id {item_id} to {device.status}"}
-
-
-@app.post("/device", tags=["Devices"])
+@app.post("/device/create", tags=["Devices"], description="Create New Device", summary="Create New Device" )
 async def createDevice(devices: Devices, request: Request):
     try:
         device_collections.insert_one({"_id": devices.id, "status": devices.status})
@@ -100,13 +27,64 @@ async def createDevice(devices: Devices, request: Request):
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
+@app.get("/device/{item_id}", tags=["Devices"], description="Get Device By ID", summary="Get Device By ID")
+async def getDeviceById(item_id: int):
+    return device_collections.find_one({"_id": item_id})
 
-@app.post("/device/details", tags=["Devices"])
+@app.put("/device/update/{item_id}", tags=["Devices"], description="Update Device By ID", summary="Update Device By ID")
+def updateDeviceById(device: DevicesPut, item_id: int):
+    device_collections.update_one({"_id": item_id}, {"$set": {"status": device.status}})
+    return {"msg": f"updated device id {item_id} to {device.status}"}
+
+@app.delete("/device/delete/{item_id}", tags=["Devices"], description="Delete Device By ID", summary="Delete Device By ID")
+async def deleteDeviceById(item_id: int):
+    device_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
+@app.get("/device/details", tags=["Devices"], description="Get All Device Details", summary="Get All Device Details")
+async def getAllDeviceDetails():
+    print('inside device details')
+    device_list = []
+    documents = device_detail_collections.find()
+    for document in documents:
+        device_list.append(document)
+    return device_list
+
+@app.get("/device/details/{item_id}", tags=["Devices"], description="Get Device Details By ID", summary="Get Device Details By ID")
+async def getDeviceDetailsById(item_id: int):
+    return device_detail_collections.find_one({"_id": item_id})
+
+@app.get("/device/log", tags=["Devices"], description="Get All Device Logs", summary="Get All Device Logs")
+async def getAllDeviceLog():
+    device_list = []
+    documents = device_details_log_collections.find()
+    for x in documents:
+        device_list.append(x)
+    return device_list
+
+@app.get("/device/boardlog", tags=["Devices"], description="Get All Device Board Logs", summary="Get All Device Board Logs")
+async def getAllBoardLog():
+    device_list = []
+    documents = device_board_log_collections.find()
+    for x in documents:
+        device_list.append(x)
+    return device_list
+
+@app.delete("/device/details/delete/{item_id}", tags=["Devices"], description="Delete Device Details By ID", summary="Delete Device Details By ID")
+async def deleteDeviceDetailsById(item_id: int):
+    device_detail_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
+@app.post("/device/details/create", tags=["Devices"], description="Create New Device Detail", summary="Create New Device Detail")
 async def createDeviceDetails(devices: DeviceDetails, request: Request):
     try:
-        device_detail_collections.insert_one(
-            {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+        device_detail_collections.insert_one({
+            "_id": devices.id,
+            "name": devices.device_name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = device_detail_collections.find()
@@ -116,7 +94,19 @@ async def createDeviceDetails(devices: DeviceDetails, request: Request):
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
 
-@app.post("/device/log", tags=["Devices"])
+@app.get("/device/details", tags=["Devices"], description="Get All Device Details", summary="Get All Device Details")
+async def All_Device_Details():
+    # device_details_collections.delete_many("_id")
+    try:
+        device_list = []
+        documents = device_detail_collections.find()
+        for document in documents:
+            device_list.append(document)
+        return device_list
+    except:
+        return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
+
+@app.post("/device/log/create", tags=["Devices"], description="Create Device Log", summary="Create Device Log")
 async def createDeviceLog(devices: Log, request: Request):
     try:
         device_details_log_collections.insert_one(
@@ -133,7 +123,7 @@ async def createDeviceLog(devices: Log, request: Request):
         return {"msg": {f"id already exist in devices log, try using other id"}}
 
 
-@app.post("/device/boardlog", tags=["Devices"])
+@app.post("/device/boardlog/create", tags=["Devices"], description="Create New Device Board Log", summary="Create New Device Board Log")
 async def createDeviceBoardLog(devices: Log, request: Request):
     try:
         device_board_log_collections.insert_one(
@@ -150,7 +140,7 @@ async def createDeviceBoardLog(devices: Log, request: Request):
         return {"msg": {f"id already exist in devices log, try using other id"}}
 
 
-@app.get("/fan", tags=["Fan"])
+@app.get("/fan", tags=["Fan"], description="Get All Fan", summary="Get All Fan")
 async def getAllFans():
     fan_list = []
     documents = fan_collections.find()
@@ -159,24 +149,24 @@ async def getAllFans():
     return fan_list
 
 
-@app.get("/fan/{item_id}", tags=["Fan"])
+@app.get("/fan/{item_id}", tags=["Fan"], description="Get Fan By ID", summary="Get Fan By ID")
 async def getFanById(item_id: int):
     return fan_collections.find_one({"_id": item_id})
 
 
-@app.delete("/fan/{item_id}", tags=["Fan"])
+@app.delete("/fan/delete/{item_id}", tags=["Fan"], description="Delete Fan By ID", summary="Delete Fan By ID")
 async def deleteFanById(item_id: int):
     fan_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
-@app.put("/fan/{item_id}", tags=["Fan"])
-def updateFanById(device: Fan_put, item_id: int):
+@app.put("/fan/update/{item_id}", tags=["Fan"], description="Update Fan By ID", summary="Update Fan By ID")
+def updateFanById(device: FanPut, item_id: int):
     fan_collections.update_one({"_id": item_id}, {"$set": {"status": device.status, "speed": device.speed}})
     return {"msg": f"updated device id {item_id} to {device.status} and speed to{device.speed}"}
 
 
-@app.post("/fan", description="Create a new item", tags=["Fan"])
+@app.post("/fan/create", tags=["Fan"], description="Create New Fan", summary="Create New Fan")
 async def createFan(fan: Fan, request: Request):
     try:
         fan_collections.insert_one({"_id": fan.id, "status": fan.status, "speed": fan.speed})
@@ -189,7 +179,7 @@ async def createFan(fan: Fan, request: Request):
                 return {"msg": {f"id {fan.id} already exist in fan, try using other id"}}
 
 
-@app.get("/fans/details", tags=["Fan"])
+@app.get("/fan/details", tags=["Fan"], description="Get All Fan Details", summary="Get All Fan Details")
 async def getFanDetails():
     try:
         device_list = []
@@ -200,11 +190,11 @@ async def getFanDetails():
     except:
         return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
 
-@app.get("/fans/details/{item_id}", tags=["Fan"])
+@app.get("/fan/details/{item_id}", tags=["Fan"], description="Get Fan Details By ID", summary="Get Fan Details By ID")
 async def getFanDetailsById(item_id: int):
     return fan_details_collections.find_one({"_id": item_id})
 
-@app.get("/fans/log", tags=["Fan"])
+@app.get("/fan/log", tags=["Fan"], description="Get All Fan Log", summary="Get All Fan Log")
 async def getFanLog():
     device_list = []
     documents = fan_details_log_collections.find()
@@ -214,8 +204,8 @@ async def getFanLog():
     return device_list
 
 
-@app.post("/fan/details", tags=["Fan"])
-async def createFanDetails(devices: Fan_details, request: Request):
+@app.post("/fan/details/create", tags=["Fan"], description="Create New Fan Details", summary="Create New Fan Details")
+async def createFanDetails(devices: FanDetails, request: Request):
     try:
         fan_details_collections.insert_one(
             {
@@ -235,7 +225,7 @@ async def createFanDetails(devices: Fan_details, request: Request):
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
 
-@app.post("/fan/log", tags=["Fan"])
+@app.post("/fan/log/create", tags=["Fan"], description="Create New Fan Log", summary="Create New Fan Log")
 async def createFanLog(devices: Log, request: Request):
     try:
         fan_details_log_collections.insert_one(
@@ -252,7 +242,7 @@ async def createFanLog(devices: Log, request: Request):
         return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
 
 
-@app.get("/fans/boardlog", tags=["Fan"])
+@app.get("/fan/boardlog", tags=["Fan"], description="Get All Fan Board Log", summary="Get All Fan Board Log")
 async def getFanBoardLog():
     try:
         device_list = []
@@ -263,7 +253,7 @@ async def getFanBoardLog():
     except:
         return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
 
-@app.post("/fan/boardlog", tags=["Fan"])
+@app.post("/fan/boardlog/create", tags=["Fan"], description="Create New Fan Board Log", summary="Create New Fan Board Log")
 async def createFanBoardLog(devices: Log, request: Request):
     try:
         fan_board_log_collections.insert_one(
@@ -281,7 +271,7 @@ async def createFanBoardLog(devices: Log, request: Request):
 
 
 
-@app.get("/led", tags=["LED"])
+@app.get("/led", tags=["LED"], description="Get All Led", summary="Get All Led")
 async def getLed():
     list = []
     documents = led_collections.find()
@@ -290,24 +280,24 @@ async def getLed():
     return list
 
 
-@app.get("/led/{item_id}", tags=["LED"])
+@app.get("/led/{item_id}", tags=["LED"], description="Get Led By ID", summary="Get Led By ID")
 async def getLedById(item_id: int):
     return led_collections.find_one({"_id": item_id})
 
 
-@app.delete("/led/{item_id}", tags=["LED"])
+@app.delete("/led/delete/{item_id}", tags=["LED"], description="Delete Led By ID", summary="Delete Led By ID")
 async def deleteLedById(item_id: int):
     led_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
-@app.put("/led/{item_id}", tags=["LED"])
-def updateLedById(led: Led_put, item_id: int):
+@app.put("/led/update/{item_id}", tags=["LED"], description="Update Led By ID", summary="Update Led By ID")
+def updateLedById(led: LedPut, item_id: int):
     led_collections.update_one({"_id": item_id}, {"$set": {"brightness": led.brightness, "status": led.status, "R": led.R, "G": led.G, "B": led.B}})
     return {"msg": f"updated to {led}"}
 
 
-@app.post("/led", description="Create a new LED", tags=["LED"])
+@app.post("/led/create", tags=["LED"], description="Create New Led", summary="Create New Led")
 async def createLed(led: Led, request: Request):
     try:
         led_collections.insert_one({"_id": led.id, "brightness": led.brightness, "status": led.status, "R": led.R, "G": led.G, "B": led.B})
@@ -320,7 +310,7 @@ async def createLed(led: Led, request: Request):
                 return {"msg": {f"id {led.id} already exist in fan, try using other id"}}
 
 
-@app.get("/leds/details", tags=["LED"])
+@app.get("/leds/details", tags=["LED"], description="Get All Led details", summary="Get All Led details")
 async def getLedDetails():
     try:
         device_list = []
@@ -331,7 +321,7 @@ async def getLedDetails():
     except:
         return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
 
-@app.get("/leds/details/{item_id}", tags=["LED"])
+@app.get("/leds/details/{item_id}", tags=["LED"], description="Get Led Details By ID", summary="Get Led Details By ID")
 async def getLedDetailsById(item_id: int):
     return led_details_collections.find_one({"_id": item_id})
 
@@ -344,8 +334,8 @@ async def getLedLog():
     return device_list
 
 
-@app.post("/leds/details", tags=["LED"])
-async def getLedDetails(devices: Led_details, request: Request):
+@app.post("/leds/details/create", tags=["LED"], description="Create New Led Details", summary="Create New Led Details")
+async def getLedDetails(devices: LedDetails, request: Request):
     try:
         led_details_collections.insert_one(
             {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
@@ -359,7 +349,7 @@ async def getLedDetails(devices: Led_details, request: Request):
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
 
-@app.post("/leds/log", tags=["LED"])
+@app.post("/leds/log/create", tags=["LED"], description="Create New Led Log", summary="Create New Led Log")
 async def getLedLog(devices: Log, request: Request):
     try:
         led_details_log_collections.insert_one({
@@ -374,7 +364,7 @@ async def getLedLog(devices: Log, request: Request):
         return {"msg": {f"id already exist in devices log, try using other id"}}
 
 
-@app.get("/mechanics", tags=["Mechanics"])
+@app.get("/mechanics", tags=["Mechanics"], description="Get All Mechanics", summary="Get All Mechanics")
 async def getMechanics():
     list = []
     documents = mechanics_collections.find()
@@ -383,24 +373,24 @@ async def getMechanics():
     return list
 
 
-@app.get("/mechanics/{item_id}", tags=["Mechanics"])
+@app.get("/mechanics/{item_id}", tags=["Mechanics"], description="Get Mechanics By ID", summary="Get Mechanics By ID")
 async def getMechanicsById(item_id: int):
     return mechanics_collections.find_one({"_id": item_id})
 
 
-@app.delete("/mechanics/{item_id}", tags=["Mechanics"])
+@app.delete("/mechanics/delete/{item_id}", tags=["Mechanics"], description="Delete Mechanics By ID", summary="Delete Mechanics By ID")
 async def deleteMechanicsById(item_id: int):
     mechanics_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
-@app.put("/mechanics/{item_id}", tags=["Mechanics"])
-def updateMechanicsById(mechanics: Mechanics_put, item_id: int):
+@app.put("/mechanics/update/{item_id}", tags=["Mechanics"], description="Update Mechanics By ID", summary="Update Mechanics By ID")
+def updateMechanicsById(mechanics: MechanicsPut, item_id: int):
     mechanics_collections.update_one({"_id": item_id}, {"$set": {"values": mechanics.values}})
     return {"msg": f"updated to {mechanics}"}
 
 
-@app.post("/mechanics", description="Create a new Mechanics", tags=["Mechanics"])
+@app.post("/mechanics/create", tags=["Mechanics"], description="Create New Mechanics", summary="Create New Mechanics")
 async def createMechanics(mechanics: Mechanics, request: Request):
     try:
         mechanics_collections.insert_one({"_id": mechanics.id, "values": mechanics.values})
@@ -413,7 +403,7 @@ async def createMechanics(mechanics: Mechanics, request: Request):
                 return {"msg": {f"id {mechanics.id} already exist in fan, try using other id"}}
 
 
-@app.get("/mechanic/details", tags=["Mechanics"])
+@app.get("/mechanic/details", tags=["Mechanics"], description="Get All Mechanics Details", summary="Get All Mechanics Details")
 async def getMechanicsDetails():
     device_list = []
     documents = mechanics_details_collections.find()
@@ -422,7 +412,7 @@ async def getMechanicsDetails():
     return device_list
 
 
-@app.get("/mechanic/detail/{item_id}", tags=["Mechanics"])
+@app.get("/mechanic/detail/{item_id}", tags=["Mechanics"], description="Get Mechanics Details By Id", summary="Get Mechanics Details By Id")
 async def getMechanicsDetailsById(item_id: int):
     return mechanics_details_collections.find_one({"_id": item_id})
 
@@ -436,8 +426,8 @@ async def getMechanicsLog():
     return device_list
 
 
-@app.post("/mechanic/details", tags=["Mechanics"])
-async def createMechanicsDetails(devices: Mechanics_details, request: Request):
+@app.post("/mechanic/details/create", tags=["Mechanics"])
+async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
     try:
         mechanics_details_collections.insert_one({
             "_id": devices.id,
@@ -455,7 +445,7 @@ async def createMechanicsDetails(devices: Mechanics_details, request: Request):
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
 
-@app.post("/mechanic/log", tags=["Mechanics"])
+@app.post("/mechanic/log/create", tags=["Mechanics"])
 async def createMechanicsLog(devices: Log, request: Request):
     try:
         mechanics_details_log_collections.insert_one({
@@ -484,14 +474,14 @@ async def getEbById(item_id: int):
     return eb_sensor_collections.find_one({"_id": item_id})
 
 
-@app.delete("/eb/{item_id}", tags=["EB"])
+@app.delete("/eb/delete/{item_id}", tags=["EB"])
 async def deleteEbById(item_id: int):
     eb_sensor_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
-@app.put("/eb/{item_id}", tags=["EB"])
-def updateEbById(eb: Eb_put, item_id: int):
+@app.put("/eb/update/{item_id}", tags=["EB"])
+def updateEbById(eb: EbPut, item_id: int):
     eb_sensor_collections.update_one(
         {"_id": item_id}, {
             "$set": {
@@ -507,7 +497,7 @@ def updateEbById(eb: Eb_put, item_id: int):
     return {"msg": f"updated to {eb}"}
 
 
-@app.post("/eb", description="Create a new Mechanics", tags=["EB"])
+@app.post("/eb/create", description="Create a new Mechanics", tags=["EB"])
 async def createEb(eb: Eb, request: Request):
     try:
         eb_sensor_collections.insert_one(
@@ -544,7 +534,7 @@ async def getEbStatusById(item_id: int):
     return eb_status_collections.find_one({"_id": item_id})
 
 
-@app.post("/eb/status", description="Create a new Mechanics", tags=["EB"])
+@app.post("/eb/status/create", description="Create a new Mechanics", tags=["EB"])
 async def createEbStatus(eb: EbStatus, request: Request):
     try:
         eb_status_collections.insert_one({"_id": eb.id, "status": eb.status, "time_stamp": eb.time_stamp})
@@ -568,20 +558,18 @@ async def getUpsVoltage():
 
 @app.get("/ups/voltage/{item_id}", tags=["EB"])
 async def getUpsVoltageById(item_id: int):
-    return eb_ups_voltage_collections.find_one({"_id": item_id})
+    return eb_ups_voltage_collections.find_one({"device_id": item_id})
 
 
-@app.post("/ups/voltage", description="Create a new Mechanics", tags=["EB"])
+@app.post("/ups/voltage/create", description="Create a new Mechanics", tags=["EB"])
 async def createUpsVoltage(eb: UpsVoltage, request: Request):
     try:
-        eb_ups_voltage_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": eb.device_id,
-                "voltage": eb.voltage,
-                "time_stamp": eb.time_stamp
-            }
-        )
+        eb_ups_voltage_collections.insert_one({
+            "_id": time.time(),
+            "device_id": eb.device_id,
+            "voltage": eb.voltage,
+            "time_stamp": eb.time_stamp
+        })
         return {"msg": "created successfully", "created_data": eb, "client": request.client}
     except:
         documents = eb_ups_voltage_collections.find()
@@ -602,10 +590,10 @@ async def getUpsAmpere():
 
 @app.get("/ups/ampere/{item_id}", tags=["EB"])
 async def getUpsAmpereById(item_id: int):
-    return eb_ups_ampere_collections.find_one({"_id": item_id})
+    return eb_ups_ampere_collections.find_one({"device_id": item_id})
 
 
-@app.post("/ups/ampere", description="Create a new Mechanics", tags=["EB"])
+@app.post("/ups/ampere/create", description="Create a new Mechanics", tags=["EB"])
 async def createUpsAmpere(eb: UpsAmpere, request: Request):
     try:
         eb_ups_ampere_collections.insert_one(
@@ -639,14 +627,14 @@ async def getEb3ById(item_id: int):
     return eb3phasae_sensor_collections.find_one({"_id": item_id})
 
 
-@app.delete("/eb3/{item_id}", tags=["EB 3 Phase"])
+@app.delete("/eb3/delete/{item_id}", tags=["EB 3 Phase"])
 async def deleteEb3ById(item_id: int):
     eb3phasae_sensor_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
-@app.put("/eb3/{item_id}", tags=["EB 3 Phase"])
-def updateEb3ById(eb3: Eb3_put, item_id: int):
+@app.put("/eb3/update/{item_id}", tags=["EB 3 Phase"])
+def updateEb3ById(eb3: Eb3Put, item_id: int):
     eb3phasae_sensor_collections.update_one(
         {"_id": item_id}, {
             "$set": {
@@ -667,7 +655,7 @@ def updateEb3ById(eb3: Eb3_put, item_id: int):
     return {"msg": f"updated to {eb3}"}
 
 
-@app.post("/eb3", description="Create a new Mechanics", tags=["EB 3 Phase"])
+@app.post("/eb3/create", description="Create a new Mechanics", tags=["EB 3 Phase"])
 async def createEb3(eb3: Eb3, request: Request):
     try:
         eb3phasae_sensor_collections.insert_one(
@@ -708,7 +696,7 @@ async def getEb3VoltageById(item_id: int):
     return eb3phasae_voltage_collections.find_one({"device_id": item_id})
 
 
-@app.post("/eb3/voltage", description="Create a new Mechanics", tags=["EB 3 Phase"])
+@app.post("/eb3/voltage/create", description="Create a new Mechanics", tags=["EB 3 Phase"])
 async def createEb3Voltage(eb3: Eb3Voltage, request: Request):
     try:
         eb3phasae_voltage_collections.insert_one(
@@ -731,8 +719,8 @@ async def createEb3Voltage(eb3: Eb3Voltage, request: Request):
                 return {"msg": {f"id {eb3.device_id} already exist in fan, try using other id"}}
 
 
-@app.put("/eb3/voltage/{item_id}", tags=["EB 3 Phase"])
-def updateEb3VoltageById(eb3: Eb3Voltage, item_id: int):
+@app.put("/eb3/voltage/update/{item_id}", tags=["EB 3 Phase"])
+def updateEb3VoltageById(eb3: Eb3VoltagePut, item_id: int):
     eb3phasae_voltage_collections.update_one(
         {"device_id": item_id}, {
             "$set": {
@@ -759,7 +747,7 @@ async def getEb3AmpereById(item_id: int):
     return eb3phasae_ampere_collections.find_one({"device_id": item_id})
 
 
-@app.post("/eb3/ampere", description="Create a new Mechanics", tags=["EB 3 Phase"])
+@app.post("/eb3/ampere/create", description="Create a new Mechanics", tags=["EB 3 Phase"])
 async def createEb3Ampere(eb3: Eb3Ampere, request: Request):
     try:
         eb3phasae_ampere_collections.insert_one(
@@ -781,8 +769,8 @@ async def createEb3Ampere(eb3: Eb3Ampere, request: Request):
             if id == eb3.id:
                 return {"msg": {f"id {eb3.id} already exist in fan, try using other id"}}
 
-@app.put("/eb3/ampere/{item_id}", tags=["EB 3 Phase"])
-def updateEb3AmpereById(eb3: Eb3Ampere, item_id: int):
+@app.put("/eb3/ampere/update/{item_id}", tags=["EB 3 Phase"])
+def updateEb3AmpereById(eb3: Eb3AmperePut, item_id: int):
     eb3phasae_ampere_collections.update_one(
         {"device_id": item_id}, {
             "$set": {
@@ -804,7 +792,7 @@ async def getRoom():
         room_list.append(document)
     return room_list
 
-@app.post("/room", description="Create a new room", tags=["Rooms"])
+@app.post("/room/create", description="Create a new room", tags=["Rooms"])
 async def createRoom(room: Rooms, request: Request):
     try:
         room_collections.insert_one({
@@ -828,9 +816,9 @@ async def createRoom(room: Rooms, request: Request):
 async def getRoomById(item_id: int):
     return room_collections.find_one({"_id": item_id})
 
-@app.put("/room/{item_id}", tags=["Rooms"])
-async def updateRoomById(rooms: Rooms, item_id: int):
-    eb3phasae_ampere_collections.update_one(
+@app.put("/room/update/{item_id}", tags=["Rooms"])
+async def updateRoomById(rooms: RoomsPut, item_id: int):
+    room_collections.update_one(
         {"_id": item_id}, {
             "$set": {
                 "name": rooms.name,
@@ -844,7 +832,7 @@ async def updateRoomById(rooms: Rooms, item_id: int):
     )
     return {"msg": f"updated to {rooms}"}
 
-@app.delete("/room/{item_id}", tags=["Rooms"])
+@app.delete("/room/delete/{item_id}", tags=["Rooms"])
 async def deleteRoomById(item_id: int):
     room_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
@@ -859,7 +847,7 @@ async def getTemp():
     return room_list
 
 
-@app.post("/temp", description="Create a new item", tags=["Temperature"])
+@app.post("/temp/create", description="Create a new item", tags=["Temperature"])
 async def createTemp(temp: Temperature, request: Request):
     try:
         temp_collections.insert_one(
@@ -880,7 +868,6 @@ async def createTemp(temp: Temperature, request: Request):
             if id == temp.device_id:
                 return {"msg": {f"id {temp.device_id} already exist in temp, try using other id"}}
 
-# to run use this command uvicorn main:app --reload --host 0.0.0.0 --port 8182
 
 
 @app.get("/motionsensor", tags=["Motion Sensor"])
@@ -897,14 +884,14 @@ async def getMotionsensorById(item_id: int):
     return motionsensor_collections.find_one({"_id": item_id})
 
 
-@app.delete("/motionsensor/{item_id}", tags=["Motion Sensor"])
+@app.delete("/motionsensor/delete/{item_id}", tags=["Motion Sensor"])
 async def deleteMotionsensor(item_id: int):
     motionsensor_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
-@app.put("/motionsensor/{item_id}", tags=["Motion Sensor"])
-async def updateMotionsensor(motion: MotionSensor_Put, item_id: int):
+@app.put("/motionsensor/update/{item_id}", tags=["Motion Sensor"])
+async def updateMotionsensor(motion: MotionSensorPut, item_id: int):
     motionsensor_collections.update_one(
         {"_id": item_id},
         {"$set": {
@@ -916,7 +903,7 @@ async def updateMotionsensor(motion: MotionSensor_Put, item_id: int):
     return {"msg": f"updated to {motion}"}
 
 
-@app.post("/motionsensor", description="Create a new MotionSensor", tags=["Motion Sensor"])
+@app.post("/motionsensor/create", description="Create a new MotionSensor", tags=["Motion Sensor"])
 async def createMotionsensor(ms: MotionSensor, request: Request):
     try:
         motionsensor_collections.insert_one({"_id": ms.id, "ss": ms.ss, "on_s": ms.on_s, "off_s": ms.off_s, "time": ms.time})
@@ -942,8 +929,8 @@ async def getMotionsensorDetailsById(item_id: int):
     return motionsensor_details_collections.find_one({"_id": item_id})
 
 
-@app.post("/motionsensor/details", tags=["Motion Sensor"])
-async def createMotionsensorDetails(devices: MotionSensor_details, request: Request):
+@app.post("/motionsensor/details/create", tags=["Motion Sensor"])
+async def createMotionsensorDetails(devices: MotionSensorDetails, request: Request):
     try:
         motionsensor_details_collections.insert_one(
             {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
@@ -957,8 +944,8 @@ async def createMotionsensorDetails(devices: MotionSensor_details, request: Requ
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
 
-@app.put("/motionsensor/details/{item_id}", tags=["Motion Sensor"])
-def updateMotionsensorDetailsById(device: MotionSensor_details_put, item_id: int):
+@app.put("/motionsensor/details/update/{item_id}", tags=["Motion Sensor"])
+def updateMotionsensorDetailsById(device: MotionSensorDetailsPut, item_id: int):
     motionsensor_details_collections.update_one(
         {"_id": item_id},
         {
@@ -973,7 +960,7 @@ def updateMotionsensorDetailsById(device: MotionSensor_details_put, item_id: int
 
     return {"msg": f"updated device id {item_id} to {device}"}
 
-@app.delete("/motionsensor/details/{item_id}", tags=["Motion Sensor"])
+@app.delete("/motionsensor/details/delete/{item_id}", tags=["Motion Sensor"])
 async def deleteMotionsensorDetailsById(item_id: int):
     motionsensor_details_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
@@ -986,28 +973,6 @@ async def getTemp():
     for document in documents:
         room_list.append(document)
     return room_list
-
-
-@app.post("/temp", description="Create a new item", tags=["Temperature"])
-async def createTemp(temp: Temperature, request: Request):
-    try:
-        temp_collections.insert_one(
-            {
-                "_id": temp.device_id,
-                "ss": temp.device_id,
-                "on_s": temp.room,
-                "off_s": temp.temperature,
-                "time": temp.humidity,
-            }
-        )
-        return {"msg": "created successfully", "created_data": temp, "client": request.client}
-    except:
-        documents = temp_collections.find()
-        for document in documents:
-            id = document["_id"]
-            if id == temp.device_id:
-                return {"msg": {f"id {temp.device_id} already exist in temp, try using other id"}}
-
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8182, reload=True)
