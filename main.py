@@ -43,7 +43,6 @@ async def deleteDeviceById(item_id: int):
 
 @app.get("/device/details", tags=["Devices"], description="Get All Device Details", summary="Get All Device Details")
 async def getAllDeviceDetails():
-    print('inside device details')
     device_list = []
     documents = device_detail_collections.find()
     for document in documents:
