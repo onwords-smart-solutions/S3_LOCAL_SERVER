@@ -402,7 +402,12 @@ async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
             id = document["_id"]
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
-            
+
+@app.delete("/mechanics/details/delete/{item_id}", tags=["Mechanics"], description="Delete Mechanics Details By ID", summary="Delete Mechanics Details By ID")
+async def deleteMechanicsDetailsById(item_id: int):
+    mechanics_details_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
 @app.get("/mechanics/log/all", tags=["Mechanics"], description="Get All mechanics Log", summary="Get All mechanics Log")
 async def getMechanicsLog():
     device_list = []
