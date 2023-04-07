@@ -15,6 +15,10 @@ async def getAllDevices():
         device_list.append(document)
     return device_list
 
+@app.get("/device/{item_id}", tags=["Devices"], description="Get Device By ID", summary="Get Device By ID")
+async def getDeviceById(item_id: int):
+    return device_collections.find_one({"_id": item_id})
+
 @app.post("/device/create", tags=["Devices"], description="Create New Device", summary="Create New Device" )
 async def createDevice(devices: Devices, request: Request):
     try:
@@ -26,10 +30,6 @@ async def createDevice(devices: Devices, request: Request):
             id = document["_id"]
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
-
-@app.get("/device/{item_id}", tags=["Devices"], description="Get Device By ID", summary="Get Device By ID")
-async def getDeviceById(item_id: int):
-    return device_collections.find_one({"_id": item_id})
 
 @app.put("/device/update/{item_id}", tags=["Devices"], description="Update Device By ID", summary="Update Device By ID")
 def updateDeviceById(device: DevicesPut, item_id: int):
@@ -93,17 +93,6 @@ async def createDeviceDetails(devices: DeviceDetails, request: Request):
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
 
 
-@app.get("/device/details", tags=["Devices"], description="Get All Device Details", summary="Get All Device Details")
-async def All_Device_Details():
-    # device_details_collections.delete_many("_id")
-    try:
-        device_list = []
-        documents = device_detail_collections.find()
-        for document in documents:
-            device_list.append(document)
-        return device_list
-    except:
-        return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
 
 @app.post("/device/log/create", tags=["Devices"], description="Create Device Log", summary="Create Device Log")
 async def createDeviceLog(devices: Log, request: Request):
