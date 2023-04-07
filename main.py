@@ -53,7 +53,7 @@ async def getAllDeviceDetails():
 async def getDeviceDetailsById(item_id: int):
     return device_detail_collections.find_one({"_id": item_id})
 
-@app.post("/device/details/create", tags=["Devices"], description="Create New Device Detail", summary="Create New Device Detail")
+@app.post("/device/details/create", tags=["Devices"], description="Create New Device Details", summary="Create New Device Details")
 async def createDeviceDetails(devices: DeviceDetails, request: Request):
     try:
         device_detail_collections.insert_one({
@@ -98,7 +98,11 @@ async def createDeviceLog(devices: Log, request: Request):
         )
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
-        return {"msg": {f"id already exist in devices log, try using other id"}}
+        documents = device_details_log_collections.find()
+        for document in documents:
+            id = document["device_id"]
+            if id == devices.device_id:
+                return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
     
 @app.get("/device/boardlog/all", tags=["Devices"], description="Get All Device Board Logs", summary="Get All Device Board Logs")
 async def getAllBoardLog():
@@ -122,7 +126,11 @@ async def createDeviceBoardLog(devices: Log, request: Request):
         )
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
-        return {"msg": {f"id already exist in devices log, try using other id"}}
+        documents = device_board_log_collections.find()
+        for document in documents:
+            id = document["device_id"]
+            if id == devices.device_id:
+                return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
 
 @app.get("/fan/all", tags=["Fan"], description="Get All Fan", summary="Get All Fan")
 async def getAllFans():
@@ -160,14 +168,11 @@ async def deleteFanById(item_id: int):
 
 @app.get("/fan/details/all", tags=["Fan"], description="Get All Fan Details", summary="Get All Fan Details")
 async def getFanDetails():
-    try:
-        device_list = []
-        documents = fan_details_collections.find()
-        for document in documents:
-            device_list.append(document)
-        return device_list
-    except:
-        return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
+    device_list = []
+    documents = fan_details_collections.find()
+    for document in documents:
+        device_list.append(document)
+    return device_list
 
 @app.get("/fan/details/{item_id}", tags=["Fan"], description="Get Fan Details By ID", summary="Get Fan Details By ID")
 async def getFanDetailsById(item_id: int):
@@ -215,18 +220,19 @@ async def createFanLog(devices: Log, request: Request):
         )
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
-        return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
+        documents = fan_details_log_collections.find()
+        for document in documents:
+            id = document["device_id"]
+            if id == devices.device_id:
+                return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
 
 @app.get("/fan/boardlog/all", tags=["Fan"], description="Get All Fan Board Log", summary="Get All Fan Board Log")
 async def getFanBoardLog():
-    try:
-        device_list = []
-        documents = fan_board_log_collections.find()
-        for x in documents:
-            device_list.append(x)
-        return device_list
-    except:
-        return "invalid url, contact admin at admin@onwords.in or cs@onwords.in"
+    device_list = []
+    documents = fan_board_log_collections.find()
+    for x in documents:
+        device_list.append(x)
+    return device_list
 
 @app.post("/fan/boardlog/create", tags=["Fan"], description="Create New Fan Board Log", summary="Create New Fan Board Log")
 async def createFanBoardLog(devices: Log, request: Request):
@@ -242,7 +248,11 @@ async def createFanBoardLog(devices: Log, request: Request):
         )
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
-        return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
+        documents = fan_board_log_collections.find()
+        for document in documents:
+            id = document["device_id"]
+            if id == devices.device_id:
+                return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
 
 @app.get("/led/all", tags=["LED"], description="Get All Led", summary="Get All Led")
 async def getLed():
@@ -327,7 +337,7 @@ async def getLedLog(devices: Log, request: Request):
         })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
-        return {"msg": {f"id already exist in devices log, try using other id"}}
+        return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
 
 @app.get("/mechanics/all", tags=["Mechanics"], description="Get All Mechanics", summary="Get All Mechanics")
 async def getMechanics():
@@ -371,11 +381,11 @@ async def getMechanicsDetails():
         device_list.append(document)
     return device_list
 
-@app.get("/mechanics/detail/{item_id}", tags=["Mechanics"], description="Get Mechanics Details By ID", summary="Get Mechanics Details By ID")
+@app.get("/mechanics/details/{item_id}", tags=["Mechanics"], description="Get Mechanics Details By ID", summary="Get Mechanics Details By ID")
 async def getMechanicsDetailsById(item_id: int):
     return mechanics_details_collections.find_one({"_id": item_id})
 
-@app.post("/mechanics/details/create", tags=["Mechanics"], description="Create New Mechanic details", summary="Create New Mechanic details")
+@app.post("/mechanics/details/create", tags=["Mechanics"], description="Create New Mechanics details", summary="Create New Mechanics details")
 async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
     try:
         mechanics_details_collections.insert_one({
@@ -393,7 +403,7 @@ async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
             
-@app.get("/mechanics/log/all", tags=["Mechanics"], description="Get All mechanic Log", summary="Get All mechanic Log")
+@app.get("/mechanics/log/all", tags=["Mechanics"], description="Get All mechanics Log", summary="Get All mechanics Log")
 async def getMechanicsLog():
     device_list = []
     documents = mechanics_details_log_collections.find()
@@ -401,7 +411,7 @@ async def getMechanicsLog():
         device_list.append(x)
     return device_list
 
-@app.post("/mechanics/log/create", tags=["Mechanics"], description="Create New Mechanic Log", summary="Create New Mechanic Log")
+@app.post("/mechanics/log/create", tags=["Mechanics"], description="Create New Mechanics Log", summary="Create New Mechanics Log")
 async def createMechanicsLog(devices: Log, request: Request):
     try:
         mechanics_details_log_collections.insert_one({
