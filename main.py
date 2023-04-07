@@ -882,13 +882,6 @@ async def deleteMotionsensorDetailsById(item_id: int):
     motionsensor_details_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
-# @app.get("/temp", tags=["Temperature"], description="Get All Temp", summary="Get All Temp")
-# async def getTemp():
-#     room_list = []
-#     documents = temp_collections.find()
-#     for document in documents:
-#         room_list.append(document)
-#     return room_list
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8182, reload=True)
