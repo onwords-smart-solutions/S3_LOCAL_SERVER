@@ -70,7 +70,7 @@ async def createDeviceDetails(devices: DeviceDetails, request: Request):
             id = document["_id"]
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
-            
+
 @app.delete("/device/details/delete/{item_id}", tags=["Devices"], description="Delete Device Details By ID", summary="Delete Device Details By ID")
 async def deleteDeviceDetailsById(item_id: int):
     device_detail_collections.delete_one({"_id": item_id})
@@ -197,7 +197,12 @@ async def createFanDetails(devices: FanDetails, request: Request):
             id = document["_id"]
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
-            
+
+@app.delete("/fan/details/delete/{item_id}", tags=["Fan"], description="Delete Fan Details By ID", summary="Delete Fan Details By ID")
+async def deleteFanDetailsById(item_id: int):
+    fan_details_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
 @app.get("/fan/log/all", tags=["Fan"], description="Get All Fan Log", summary="Get All Fan Log")
 async def getFanLog():
     device_list = []
@@ -317,6 +322,11 @@ async def getLedDetails(devices: LedDetails, request: Request):
             if id == devices.id:
                 return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
             
+@app.delete("/led/details/delete/{item_id}", tags=["LED"], description="Delete Led Details By ID", summary="Delete Led Details By ID")
+async def deleteLedDetailsById(item_id: int):
+    led_details_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
 @app.get("/led/log/all", tags=["LED"], description="Get All Led Log", summary="Get All Led Log")
 async def getLedLog():
     device_list = []
