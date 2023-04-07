@@ -7,7 +7,7 @@ import uvicorn
 app = FastAPI(title="Onwords Local Smart Home Server", docs_url="/admin", redoc_url="/document")
 
 
-@app.get("/device", tags=["Devices"], description="Get All Devices", summary="Get All Devices")
+@app.get("/device/all", tags=["Devices"], description="Get All Devices", summary="Get All Devices")
 async def getAllDevices():
     device_list = []
     documents = device_collections.find()
