@@ -166,6 +166,7 @@ class Rooms(BaseModel):
     led: list[int]
     mechanics: list[int]
     motion_sensor: list[int]
+    wta: list[int]
 
 class RoomsPut(BaseModel):
     name: str

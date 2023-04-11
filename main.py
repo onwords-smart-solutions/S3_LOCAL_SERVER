@@ -908,5 +908,46 @@ async def deleteMotionsensorDetailsById(item_id: int):
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 
+@app.get("/wta/all", tags=["Motion Sensor"], description="Get All Motionsensor", summary="Get All Motionsensor")
+async def getMotionsensor():
+    list = []
+    documents = motionsensor_collections.find()
+    for document in documents:
+        list.append(document)
+    return list
+
+@app.get("/wta/{item_id}", tags=["Motion Sensor"], description="Get Motionsensor By ID", summary="Get Motionsensor By ID")
+async def getMotionsensorById(item_id: int):
+    return motionsensor_collections.find_one({"_id": item_id})
+
+@app.post("/wta/create", tags=["Motion Sensor"], description="Create New Motionsensor", summary="Create New Motionsensor")
+async def createMotionsensor(ms: MotionSensor, request: Request):
+    try:
+        motionsensor_collections.insert_one({"_id": ms.id, "ss": ms.ss, "on_s": ms.on_s, "off_s": ms.off_s, "time": ms.time})
+        return {"msg": "created successfully", "created_data": ms, "client": request.client}
+    except:
+        documents = motionsensor_collections.find()
+        for document in documents:
+            id = document["_id"]
+            if id == ms.id:
+                return {"msg": {f"id {ms.id} already exist in fan, try using other id"}}
+            
+@app.put("/wta/update/{item_id}", tags=["Motion Sensor"], description="Update Motionsensor By ID", summary="Update Motionsensor By ID")
+async def updateMotionsensor(motion: MotionSensorPut, item_id: int):
+    motionsensor_collections.update_one(
+        {"_id": item_id},
+        {"$set": {
+            "ss": motion.ss,
+            "on_s": motion.on_s,
+            "off_s": motion.off_s,
+            "time": motion.time
+        }})
+    return {"msg": f"updated to {motion}"}
+
+@app.delete("/wta/delete/{item_id}", tags=["Motion Sensor"], description="Delete Motionsensor By ID", summary="Delete Motionsensor By ID")
+async def deleteMotionsensor(item_id: int):
+    motionsensor_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8182, reload=True)
