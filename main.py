@@ -35,7 +35,7 @@ async def createDevice(devices: Devices, request: Request):
 def updateDeviceById(device: DevicesPut, item_id: int):
     update_fields = {}
     if  device.status is not None:
-        update_fields['status'] =device.status                    
+        update_fields['status'] =device.status
     device_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -168,7 +168,7 @@ def updateFanById(device: FanPut, item_id: int):
     if  device.status is not None:
         update_fields['status'] =device.status
     if  device.speed is not None:
-        update_fields['speed'] =device.speed                      
+        update_fields['speed'] =device.speed
     fan_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -309,7 +309,7 @@ def updateLedById(led: LedPut, item_id: int):
     if  led.G is not None:
         update_fields['G'] =led.G
     if  led.B is not None:
-        update_fields['B'] =led.B                       
+        update_fields['B'] =led.B
     led_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
