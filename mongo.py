@@ -39,3 +39,4 @@ temp_collections = db["temperature"]
 
 motionsensor_collections = db["motion_sensor"]
 motionsensor_details_collections = db["motion_sensor_details"]
+

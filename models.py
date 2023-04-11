@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-
+from typing import Optional
 
 class Devices(BaseModel):
     id: int
     status: bool
 
 class DevicesPut(BaseModel):
-    status: bool
+    status: Optional[bool]
 
 class DeviceDetails(BaseModel):
     id: int
@@ -16,10 +16,10 @@ class DeviceDetails(BaseModel):
     type: str
 
 class DevicesDetailsPut(BaseModel):
-    device_id: int
-    name: str
-    room: str
-    type: str
+    device_id: Optional[int]
+    name: Optional[str]
+    room: Optional[str]
+    type: Optional[str]
 
 class Fan(BaseModel):
     id: int
@@ -27,8 +27,8 @@ class Fan(BaseModel):
     speed: int
 
 class FanPut(BaseModel):
-    status: bool
-    speed: int
+    status: Optional[bool]
+    speed: Optional[int]
 
 class FanDetails(BaseModel):
     id: int
@@ -46,11 +46,11 @@ class Led(BaseModel):
     B: str
 
 class LedPut(BaseModel):
-    brightness: str
-    status: bool
-    R: str
-    G: str
-    B: str
+    brightness: Optional[str]
+    status: Optional[bool]
+    R: Optional[str]
+    G: Optional[str]
+    B: Optional[str]
 
 class LedDetails(BaseModel):
     id: int
@@ -64,8 +64,7 @@ class Mechanics(BaseModel):
     values: str
 
 class MechanicsPut(BaseModel):
-    id: int
-    values: str
+    values: Optional[str]
 
 class MechanicsDetails(BaseModel):
     id: int
@@ -84,12 +83,12 @@ class Eb(BaseModel):
     ups_battery_percentage: int
 
 class EbPut(BaseModel):
-    voltage: int
-    amp: float
-    status: bool
-    ups_voltage: int
-    ups_AMP: int
-    ups_battery_percentage: int
+    voltage: Optional[int]
+    amp: Optional[float]
+    status: Optional[bool]
+    ups_voltage: Optional[int]
+    ups_AMP: Optional[int]
+    ups_battery_percentage: Optional[int]
 
 class EbStatus(BaseModel):
     id: int
@@ -120,16 +119,16 @@ class Eb3(BaseModel):
     ups_battery_percentage: int
 
 class Eb3Put(BaseModel):
-    R_voltage: int
-    Y_voltage: int
-    B_voltage: int
-    R_amp: float
-    Y_amp: float
-    B_amp: float
-    status: bool
-    ups_voltage: int
-    ups_AMP: int
-    ups_battery_percentage: int
+    R_voltage: Optional[int]
+    Y_voltage: Optional[int]
+    B_voltage: Optional[int]
+    R_amp: Optional[float]
+    Y_amp: Optional[float]
+    B_amp: Optional[float]
+    status: Optional[bool]
+    ups_voltage: Optional[int]
+    ups_AMP: Optional[int]
+    ups_battery_percentage: Optional[int]
 
 class Eb3Voltage(BaseModel):
     device_id: int
@@ -139,10 +138,10 @@ class Eb3Voltage(BaseModel):
     time_stamp: int
 
 class Eb3VoltagePut(BaseModel):
-    r_voltage: int
-    y_voltage: int
-    b_voltage: int
-    time_stamp: int
+    r_voltage: Optional[int]
+    y_voltage: Optional[int]
+    b_voltage: Optional[int]
+    time_stamp: Optional[int]
 
 class Eb3Ampere(BaseModel):
     device_id: int
@@ -152,11 +151,11 @@ class Eb3Ampere(BaseModel):
     time_stamp: int
 
 class Eb3AmperePut(BaseModel):
-    device_id: int
-    r_ampere: float
-    y_ampere: float
-    b_ampere: float
-    time_stamp: int
+    device_id: Optional[int]
+    r_ampere: Optional[float]
+    y_ampere: Optional[float]
+    b_ampere: Optional[float]
+    time_stamp: Optional[int]
 
 class Rooms(BaseModel):
     id: int
@@ -169,12 +168,12 @@ class Rooms(BaseModel):
     wta: list[int]
 
 class RoomsPut(BaseModel):
-    name: str
-    devices: list[int]
-    fan: list[int]
-    led: list[int]
-    mechanics: list[int]
-    motion_sensor: list[int]
+    name: Optional[str]
+    devices: Optional[list[int]]
+    fan: Optional[list[int]]
+    led: Optional[list[int]]
+    mechanics: Optional[list[int]]
+    motion_sensor: Optional[list[int]]
 
 class Temperature(BaseModel):
     device_id: int
@@ -189,10 +188,6 @@ class Log(BaseModel):
     timestamp: int
     updated_by: str
 
-class Wta(BaseModel):
-    id: int
-    level: int
-
 class MotionSensor(BaseModel):
     id: int
     ss: bool
@@ -201,10 +196,10 @@ class MotionSensor(BaseModel):
     time: int
 
 class MotionSensorPut(BaseModel):
-    ss: bool
-    on_s: bool
-    off_s: bool
-    time: int
+    ss: Optional[bool]
+    on_s: Optional[bool]
+    off_s: Optional[bool]
+    time: Optional[int]
 
 class MotionSensorDetails(BaseModel):
     id: int
@@ -214,7 +209,16 @@ class MotionSensorDetails(BaseModel):
     type: str
 
 class MotionSensorDetailsPut(BaseModel):
-    device_id: int
-    device_name: str
-    room: str
-    type: str
+    device_id: Optional[int]
+    device_name: Optional[str]
+    room: Optional[str]
+    type: Optional[str]
+
+class Wta(BaseModel):
+    id: int
+    level: int
+    preset_value:int
+
+class WtaPut(BaseModel):
+    level: Optional[int]
+    preset_value: Optional[int]    

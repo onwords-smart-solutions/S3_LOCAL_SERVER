@@ -33,8 +33,14 @@ async def createDevice(devices: Devices, request: Request):
 
 @app.put("/device/update/{item_id}", tags=["Devices"], description="Update Device By ID", summary="Update Device By ID")
 def updateDeviceById(device: DevicesPut, item_id: int):
-    device_collections.update_one({"_id": item_id}, {"$set": {"status": device.status}})
-    return {"msg": f"updated device id {item_id} to {device.status}"}
+    update_fields = {}
+    if  device.status is not None:
+        update_fields['status'] =device.status                    
+    device_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
 
 @app.delete("/device/delete/{item_id}", tags=["Devices"], description="Delete Device By ID", summary="Delete Device By ID")
 async def deleteDeviceById(item_id: int):
@@ -158,8 +164,16 @@ async def createFan(fan: Fan, request: Request):
 
 @app.put("/fan/update/{item_id}", tags=["Fan"], description="Update Fan By ID", summary="Update Fan By ID")
 def updateFanById(device: FanPut, item_id: int):
-    fan_collections.update_one({"_id": item_id}, {"$set": {"status": device.status, "speed": device.speed}})
-    return {"msg": f"updated device id {item_id} to {device.status} and speed to{device.speed}"}
+    update_fields = {}
+    if  device.status is not None:
+        update_fields['status'] =device.status
+    if  device.speed is not None:
+        update_fields['speed'] =device.speed                      
+    fan_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
 
 @app.delete("/fan/delete/{item_id}", tags=["Fan"], description="Delete Fan By ID", summary="Delete Fan By ID")
 async def deleteFanById(item_id: int):
@@ -285,8 +299,22 @@ async def createLed(led: Led, request: Request):
             
 @app.put("/led/update/{item_id}", tags=["LED"], description="Update Led By ID", summary="Update Led By ID")
 def updateLedById(led: LedPut, item_id: int):
-    led_collections.update_one({"_id": item_id}, {"$set": {"brightness": led.brightness, "status": led.status, "R": led.R, "G": led.G, "B": led.B}})
-    return {"msg": f"updated to {led}"}
+    update_fields = {}
+    if  led.brightness is not None:
+        update_fields['values'] =led.brightness
+    if  led.status is not None:
+        update_fields['status'] =led.status
+    if  led.R is not None:
+        update_fields['R'] =led.R
+    if  led.G is not None:
+        update_fields['G'] =led.G
+    if  led.B is not None:
+        update_fields['B'] =led.B                       
+    led_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated to {update_fields}"}
 
 @app.delete("/led/delete/{item_id}", tags=["LED"], description="Delete Led By ID", summary="Delete Led By ID")
 async def deleteLedById(item_id: int):
@@ -375,8 +403,14 @@ async def createMechanics(mechanics: Mechanics, request: Request):
             
 @app.put("/mechanics/update/{item_id}", tags=["Mechanics"], description="Update Mechanics By ID", summary="Update Mechanics By ID")
 def updateMechanicsById(mechanics: MechanicsPut, item_id: int):
-    mechanics_collections.update_one({"_id": item_id}, {"$set": {"values": mechanics.values}})
-    return {"msg": f"updated to {mechanics}"}
+    update_fields = {}
+    if  mechanics.values is not None:
+        update_fields['values'] =mechanics.values        
+    mechanics_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated to {update_fields}"}
 
 @app.delete("/mechanics/delete/{item_id}", tags=["Mechanics"], description="Delete Mechanics By ID", summary="Delete Mechanics By ID")
 async def deleteMechanicsById(item_id: int):
@@ -476,19 +510,24 @@ async def createEb(eb: Eb, request: Request):
 
 @app.put("/eb/update/{item_id}", tags=["EB"], description="Update Eb By ID", summary="Update Eb By ID")
 def updateEbById(eb: EbPut, item_id: int):
+    update_fields = {}
+    if eb.voltage is not None:
+        update_fields['voltage'] = eb.voltage
+    if  eb.amp is not None:
+        update_fields['amp'] = eb.amp
+    if  eb.ups_voltage is not None:
+        update_fields['ups_voltage'] = eb.ups_voltage
+    if  eb.ups_AMP is not None:
+        update_fields['ups_AMP'] =eb.ups_AMP
+    if  eb.status is not None:
+        update_fields['status'] =eb.status
+    if  eb.ups_battery_percentage is not None:
+        update_fields['ups_battery_percentage'] =eb.ups_battery_percentage        
     eb_sensor_collections.update_one(
-        {"_id": item_id}, {
-            "$set": {
-                "voltage": eb.voltage,
-                "amp": eb.amp,
-                "ups_voltage": eb.ups_voltage,
-                "ups_amp": eb.ups_AMP,
-                "status": eb.status,
-                "ups_battery_percentages": eb.ups_battery_percentage
-            }
-        }
+        {"_id": item_id},
+        {"$set": update_fields}
     )
-    return {"msg": f"updated to {eb}"}
+    return {"msg": f"updated to {update_fields}"}
 
 @app.delete("/eb/delete/{item_id}", tags=["EB"], description="Delete Eb By ID", summary="Delete Eb By ID")
 async def deleteEbById(item_id: int):
@@ -619,24 +658,32 @@ async def createEb3(eb3: Eb3, request: Request):
             
 @app.put("/eb3/update/{item_id}", tags=["EB 3 Phase"], description="Update Eb3 By ID ", summary="Update Eb3 By ID ")
 def updateEb3ById(eb3: Eb3Put, item_id: int):
+    update_fields = {}
+    if eb3.R_voltage is not None:
+        update_fields['R_voltage'] = eb3.R_voltage
+    if  eb3.Y_voltage is not None:
+        update_fields['Y_voltage'] = eb3.Y_voltage
+    if  eb3.B_voltage is not None:
+        update_fields['B_voltage'] = eb3.B_voltage
+    if  eb3.R_amp is not None:
+        update_fields['R_amp'] =eb3.R_amp
+    if  eb3.Y_amp is not None:
+        update_fields['Y_amp'] =eb3.Y_amp
+    if  eb3.B_amp is not None:
+        update_fields['B_amp'] =eb3.B_amp
+    if  eb3.ups_voltage is not None:
+        update_fields['ups_voltage'] =eb3.ups_voltage
+    if  eb3.ups_AMP is not None:
+        update_fields['ups_AMP'] =eb3.ups_AMP
+    if  eb3.ups_battery_percentage is not None:
+        update_fields['ups_battery_percentage'] =eb3.ups_battery_percentage
+    if  eb3.status is not None:
+        update_fields['status'] =eb3.status            
     eb3phasae_sensor_collections.update_one(
-        {"_id": item_id}, {
-            "$set": {
-                "R_voltage": eb3.R_voltage,
-                "Y_voltage": eb3.Y_voltage,
-                "B_voltage": eb3.B_voltage,
-                "R_amp": eb3.R_amp,
-                "Y_amp": eb3.Y_amp,
-                "B_amp": eb3.B_amp,
-                "ups_voltage": eb3.ups_voltage,
-                "ups_AMP": eb3.ups_AMP,
-                "ups_battery_percentage": eb3.ups_battery_percentage,
-                "status": eb3.status
-
-            }
-        }
+        {"_id": item_id},
+        {"$set": update_fields}
     )
-    return {"msg": f"updated to {eb3}"}
+    return {"msg": f"updated to {update_fields}"}
 
 @app.delete("/eb3/delete/{item_id}", tags=["EB 3 Phase"], description="Delete Eb3 By ID", summary="Delete Eb3 By ID")
 async def deleteEb3ById(item_id: int):
@@ -678,17 +725,20 @@ async def createEb3Voltage(eb3: Eb3Voltage, request: Request):
 
 @app.put("/eb3/voltage/update/{item_id}", tags=["EB 3 Phase"], description="Update Eb3 Voltage By ID", summary="Update Eb3 Voltage By ID")
 def updateEb3VoltageById(eb3: Eb3VoltagePut, item_id: int):
+    update_fields = {}
+    if eb3.r_voltage is not None:
+        update_fields['r_voltage'] = eb3.r_voltage
+    if  eb3.y_voltage is not None:
+        update_fields['y_voltage'] = eb3.y_voltage
+    if  eb3.b_voltage is not None:
+        update_fields['b_voltage'] = eb3.b_voltage
+    if  eb3.time_stamp is not None:
+        update_fields['time_stamp'] =eb3.time_stamp
     eb3phasae_voltage_collections.update_one(
-        {"device_id": item_id}, {
-            "$set": {
-                "r_voltage": eb3.r_voltage,
-                "y_voltage": eb3.y_voltage,
-                "b_voltage": eb3.b_voltage,
-                "time_stamp": eb3.time_stamp
-            }
-        }
+        {"device_id": item_id},
+        {"$set": update_fields}
     )
-    return {"msg": f"updated to {eb3}"}
+    return {"msg": f"updated to {update_fields}"}
 
 @app.get("/eb3/ampere/all", tags=["EB 3 Phase"], description="Get All Eb3 Ampere", summary="Get All Eb3 Ampere")
 async def getEb3Ampere():
@@ -726,17 +776,20 @@ async def createEb3Ampere(eb3: Eb3Ampere, request: Request):
 
 @app.put("/eb3/ampere/update/{item_id}", tags=["EB 3 Phase"], description="Update Eb3 Ampere By ID", summary="Update Eb3 Ampere By ID")
 def updateEb3AmpereById(eb3: Eb3AmperePut, item_id: int):
+    update_fields = {}
+    if eb3.r_ampere is not None:
+        update_fields['r_ampere'] = eb3.r_ampere
+    if  eb3.y_ampere is not None:
+        update_fields['y_ampere'] = eb3.y_ampere
+    if  eb3.b_ampere is not None:
+        update_fields['b_ampere'] = eb3.b_ampere
+    if  eb3.time_stamp is not None:
+        update_fields['time_stamp'] =eb3.time_stamp
     eb3phasae_ampere_collections.update_one(
-        {"device_id": item_id}, {
-            "$set": {
-                "r_ampere": eb3.r_ampere,
-                "y_ampere": eb3.y_ampere,
-                "b_ampere": eb3.b_ampere,
-                "time_stamp": eb3.time_stamp
-            }
-        }
+        {"device_id": item_id},
+        {"$set": update_fields}
     )
-    return {"msg": f"updated to {eb3}"}
+    return {"msg": f"updated to {update_fields}"}
 
 @app.get("/room/all", tags=["Rooms"], description="Get All Room", summary="Get All Room")
 async def getRoom():
@@ -772,20 +825,23 @@ async def createRoom(room: Rooms, request: Request):
 
 @app.put("/room/update/{item_id}", tags=["Rooms"], description="Update Room By ID", summary="Update Room By ID")
 async def updateRoomById(rooms: RoomsPut, item_id: int):
+    update_fields = {}
+    if rooms.name is not None:
+        update_fields['name'] = rooms.name
+    if rooms.devices is not None:
+        update_fields['devices'] = rooms.devices
+    if  rooms.fan is not None:
+        update_fields['fan'] = rooms.fan
+    if  rooms.mechanics is not None:
+        update_fields['mechanics'] = rooms.mechanics
+    if  rooms.motion_sensor is not None:
+        update_fields['motion_sensor'] = rooms.motion_sensor     
     room_collections.update_one(
-        {"_id": item_id}, {
-            "$set": {
-                "name": rooms.name,
-                "device_id": rooms.devices,
-                "fan_id": rooms.fan,
-                "led_id": rooms.led,
-                "mechanics_id": rooms.mechanics,
-                "motion_sensor_id": rooms.motion_sensor
-            }
-        }
+        {"_id": item_id},
+        {"$set": update_fields}
     )
-    return {"msg": f"updated to {rooms}"}
-
+    return {"msg": f"updated to {update_fields}"}
+    
 @app.delete("/room/delete/{item_id}", tags=["Rooms"], description="Delete Room By ID", summary="Delete Room By ID")
 async def deleteRoomById(item_id: int):
     room_collections.delete_one({"_id": item_id})
@@ -846,15 +902,20 @@ async def createMotionsensor(ms: MotionSensor, request: Request):
             
 @app.put("/motionsensor/update/{item_id}", tags=["Motion Sensor"], description="Update Motionsensor By ID", summary="Update Motionsensor By ID")
 async def updateMotionsensor(motion: MotionSensorPut, item_id: int):
+    update_fields = {}
+    if motion.ss is not None:
+        update_fields['ss'] = motion.ss
+    if motion.on_s is not None:
+        update_fields['on_s'] = motion.on_s
+    if  motion.off_s is not None:
+        update_fields['off_s'] = motion.off_s
+    if  motion.time is not None:
+        update_fields['time'] = motion.time   
     motionsensor_collections.update_one(
         {"_id": item_id},
-        {"$set": {
-            "ss": motion.ss,
-            "on_s": motion.on_s,
-            "off_s": motion.off_s,
-            "time": motion.time
-        }})
-    return {"msg": f"updated to {motion}"}
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated to {update_fields}"}
 
 @app.delete("/motionsensor/delete/{item_id}", tags=["Motion Sensor"], description="Delete Motionsensor By ID", summary="Delete Motionsensor By ID")
 async def deleteMotionsensor(item_id: int):
@@ -889,64 +950,66 @@ async def createMotionsensorDetails(devices: MotionSensorDetails, request: Reque
 
 @app.put("/motionsensor/details/update/{item_id}", tags=["Motion Sensor"], description="Update Motionsensor Details By ID", summary="Update Motionsensor Details By ID")
 def updateMotionsensorDetailsById(device: MotionSensorDetailsPut, item_id: int):
+    update_fields = {}
+    if device.device_name is not None:
+        update_fields['device_name'] = device.device_name
+    if device.room is not None:
+        update_fields['room'] = device.room
+    if  device.device_id is not None:
+        update_fields['device_id'] = device.device_id
+    if  device.type is not None:
+        update_fields['type'] = device.type   
     motionsensor_details_collections.update_one(
         {"_id": item_id},
-        {
-            "$set":{
-                "name": device.device_name,
-                "room": device.room,
-                "device_id": device.device_id,
-                "type": device.type
-            }
-        }
+        {"$set": update_fields}
     )
-    return {"msg": f"updated device id {item_id} to {device}"}
-
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
+    
 @app.delete("/motionsensor/details/delete/{item_id}", tags=["Motion Sensor"], description="Delete Motionsensor Details By ID", summary="Delete Motionsensor Details By ID")
 async def deleteMotionsensorDetailsById(item_id: int):
     motionsensor_details_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
-
-@app.get("/wta/all", tags=["Motion Sensor"], description="Get All Motionsensor", summary="Get All Motionsensor")
-async def getMotionsensor():
+@app.get("/wta/all", tags=["WTA"], description="Get All WTA", summary="Get All WTA")
+async def getWta():
     list = []
-    documents = motionsensor_collections.find()
+    documents = wta_collections.find()
     for document in documents:
         list.append(document)
     return list
 
-@app.get("/wta/{item_id}", tags=["Motion Sensor"], description="Get Motionsensor By ID", summary="Get Motionsensor By ID")
-async def getMotionsensorById(item_id: int):
-    return motionsensor_collections.find_one({"_id": item_id})
+@app.get("/wta/{item_id}", tags=["WTA"], description="Get WTA By ID", summary="Get WTA By ID")
+async def getWtaById(item_id: int):
+    return wta_collections.find_one({"_id": item_id})
 
-@app.post("/wta/create", tags=["Motion Sensor"], description="Create New Motionsensor", summary="Create New Motionsensor")
-async def createMotionsensor(ms: MotionSensor, request: Request):
+@app.post("/wta/create", tags=["WTA"], description="Create New WTA", summary="Create New WTA")
+async def createWta(ms: Wta, request: Request):
     try:
-        motionsensor_collections.insert_one({"_id": ms.id, "ss": ms.ss, "on_s": ms.on_s, "off_s": ms.off_s, "time": ms.time})
+        wta_collections.insert_one({"_id": ms.id, "level": ms.level, "preset_value": ms.preset_value})
         return {"msg": "created successfully", "created_data": ms, "client": request.client}
     except:
-        documents = motionsensor_collections.find()
+        documents = wta_collections.find()
         for document in documents:
             id = document["_id"]
             if id == ms.id:
                 return {"msg": {f"id {ms.id} already exist in fan, try using other id"}}
             
-@app.put("/wta/update/{item_id}", tags=["Motion Sensor"], description="Update Motionsensor By ID", summary="Update Motionsensor By ID")
-async def updateMotionsensor(motion: MotionSensorPut, item_id: int):
-    motionsensor_collections.update_one(
+@app.put("/wta/update/{item_id}", tags=["WTA"], description="Update WTA By ID", summary="Update WTA By ID")
+async def updateWta(wta: WtaPut, item_id: int):
+    update_fields = {}
+    if wta.level is not None:
+        update_fields['level'] = wta.level
+    if wta.preset_value is not None:
+        update_fields['preset_value'] = wta.preset_value
+    wta_collections.update_one(
         {"_id": item_id},
-        {"$set": {
-            "ss": motion.ss,
-            "on_s": motion.on_s,
-            "off_s": motion.off_s,
-            "time": motion.time
-        }})
-    return {"msg": f"updated to {motion}"}
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated to {update_fields}"}
 
-@app.delete("/wta/delete/{item_id}", tags=["Motion Sensor"], description="Delete Motionsensor By ID", summary="Delete Motionsensor By ID")
-async def deleteMotionsensor(item_id: int):
-    motionsensor_collections.delete_one({"_id": item_id})
+@app.delete("/wta/delete/{item_id}", tags=["WTA"], description="Delete WTA By ID", summary="Delete WTA By ID")
+async def deleteWta(item_id: int):
+    wta_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 if __name__ == "__main__":
