@@ -221,4 +221,17 @@ class Wta(BaseModel):
 
 class WtaPut(BaseModel):
     level: Optional[int]
-    preset_value: Optional[int]    
+    preset_value: Optional[int]
+
+class wtaDetails(BaseModel):
+    id: int
+    device_id: int
+    device_name: str
+    room: str
+    type: str
+
+class wtaDetailsPut(BaseModel):
+    device_id: Optional[int]
+    device_name: Optional[str]
+    room: Optional[str]
+    type: Optional[str]

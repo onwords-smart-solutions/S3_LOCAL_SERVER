@@ -35,7 +35,7 @@ async def createDevice(devices: Devices, request: Request):
 def updateDeviceById(device: DevicesPut, item_id: int):
     update_fields = {}
     if  device.status is not None:
-        update_fields['status'] =device.status                    
+        update_fields['status'] =device.status
     device_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -168,7 +168,7 @@ def updateFanById(device: FanPut, item_id: int):
     if  device.status is not None:
         update_fields['status'] =device.status
     if  device.speed is not None:
-        update_fields['speed'] =device.speed                      
+        update_fields['speed'] =device.speed
     fan_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -190,7 +190,11 @@ async def getFanDetails():
 
 @app.get("/fan/details/{item_id}", tags=["Fan"], description="Get Fan Details By ID", summary="Get Fan Details By ID")
 async def getFanDetailsById(item_id: int):
-    return fan_details_collections.find_one({"_id": item_id})
+    existing_mechanics = mechanics_collections.find_one({"_id": item_id})
+    if existing_mechanics is None:
+        return {"message": f"led with ID {item_id} not found."}
+    else:
+        return fan_details_collections.find_one({"_id": item_id})
 
 @app.post("/fan/details/create", tags=["Fan"], description="Create New Fan Details", summary="Create New Fan Details")
 async def createFanDetails(devices: FanDetails, request: Request):
@@ -283,7 +287,11 @@ async def getLed():
 
 @app.get("/led/{item_id}", tags=["LED"], description="Get Led By ID", summary="Get Led By ID")
 async def getLedById(item_id: int):
-    return led_collections.find_one({"_id": item_id})
+    existing_led = led_collections.find_one({"_id": item_id})
+    if existing_led is None:
+        return {"message": f"led with ID {item_id} not found."}
+    else:
+        return led_collections.find_one({"_id": item_id})
 
 @app.post("/led/create", tags=["LED"], description="Create New Led", summary="Create New Led")
 async def createLed(led: Led, request: Request):
@@ -299,6 +307,9 @@ async def createLed(led: Led, request: Request):
             
 @app.put("/led/update/{item_id}", tags=["LED"], description="Update Led By ID", summary="Update Led By ID")
 def updateLedById(led: LedPut, item_id: int):
+    existing_led = led_collections.find_one({"_id": item_id})
+    if existing_led is None:
+        return {"message": f"led with ID {item_id} not found."}
     update_fields = {}
     if  led.brightness is not None:
         update_fields['values'] =led.brightness
@@ -309,7 +320,7 @@ def updateLedById(led: LedPut, item_id: int):
     if  led.G is not None:
         update_fields['G'] =led.G
     if  led.B is not None:
-        update_fields['B'] =led.B                       
+        update_fields['B'] =led.B
     led_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -334,7 +345,11 @@ async def getLedDetails():
 
 @app.get("/led/details/{item_id}", tags=["LED"], description="Get Led Details By ID", summary="Get Led Details By ID")
 async def getLedDetailsById(item_id: int):
-    return led_details_collections.find_one({"_id": item_id})
+    existing_mechanics = mechanics_collections.find_one({"_id": item_id})
+    if existing_mechanics is None:
+        return {"message": f"led with ID {item_id} not found."}
+    else:
+        return led_details_collections.find_one({"_id": item_id})
 
 @app.post("/led/details/create", tags=["LED"], description="Create New Led Details", summary="Create New Led Details")
 async def getLedDetails(devices: LedDetails, request: Request):
@@ -387,7 +402,11 @@ async def getMechanics():
 
 @app.get("/mechanics/{item_id}", tags=["Mechanics"], description="Get Mechanics By ID", summary="Get Mechanics By ID")
 async def getMechanicsById(item_id: int):
-    return mechanics_collections.find_one({"_id": item_id})
+    existing_mechanics = mechanics_collections.find_one({"_id": item_id})
+    if existing_mechanics is None:
+        return {"message": f"Mechanics with ID {item_id} not found."}
+    else:
+        return mechanics_collections.find_one({"_id": item_id})
 
 @app.post("/mechanics/create", tags=["Mechanics"], description="Create New Mechanics", summary="Create New Mechanics")
 async def createMechanics(mechanics: Mechanics, request: Request):
@@ -403,9 +422,12 @@ async def createMechanics(mechanics: Mechanics, request: Request):
             
 @app.put("/mechanics/update/{item_id}", tags=["Mechanics"], description="Update Mechanics By ID", summary="Update Mechanics By ID")
 def updateMechanicsById(mechanics: MechanicsPut, item_id: int):
+    existing_mechanics = mechanics_collections.find_one({"_id": item_id})
+    if existing_mechanics is None:
+        return {"message": f"Mechanics with ID {item_id} not found."}
     update_fields = {}
     if  mechanics.values is not None:
-        update_fields['values'] =mechanics.values        
+        update_fields['values'] =mechanics.values
     mechanics_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -427,6 +449,9 @@ async def getMechanicsDetails():
 
 @app.get("/mechanics/details/{item_id}", tags=["Mechanics"], description="Get Mechanics Details By ID", summary="Get Mechanics Details By ID")
 async def getMechanicsDetailsById(item_id: int):
+    existing_mechanicsdetailes = mechanics_details_collections.find_one({"_id": item_id})
+    if existing_mechanicsdetailes is None:
+        return {"message": f"Mechanics with ID {item_id} not found."}
     return mechanics_details_collections.find_one({"_id": item_id})
 
 @app.post("/mechanics/details/create", tags=["Mechanics"], description="Create New Mechanics details", summary="Create New Mechanics details")
@@ -484,6 +509,9 @@ async def getEb():
 
 @app.get("/eb/{item_id}", tags=["EB"], description="Get Eb By ID", summary="Get Eb By ID")
 async def getEbById(item_id: int):
+    existing_eb = eb_sensor_collections.find_one({"_id": item_id})
+    if existing_eb is None:
+        return {"message": f"eb with ID {item_id} not found."}
     return eb_sensor_collections.find_one({"_id": item_id})
 
 @app.post("/eb/create", tags=["EB"], description="Create New Eb", summary="Create New Eb")
@@ -510,6 +538,9 @@ async def createEb(eb: Eb, request: Request):
 
 @app.put("/eb/update/{item_id}", tags=["EB"], description="Update Eb By ID", summary="Update Eb By ID")
 def updateEbById(eb: EbPut, item_id: int):
+    existing_eb = eb_sensor_collections.find_one({"_id": item_id})
+    if existing_eb is None:
+        return {"message": f"eb with ID {item_id} not found."}
     update_fields = {}
     if eb.voltage is not None:
         update_fields['voltage'] = eb.voltage
@@ -522,7 +553,7 @@ def updateEbById(eb: EbPut, item_id: int):
     if  eb.status is not None:
         update_fields['status'] =eb.status
     if  eb.ups_battery_percentage is not None:
-        update_fields['ups_battery_percentage'] =eb.ups_battery_percentage        
+        update_fields['ups_battery_percentage'] =eb.ups_battery_percentage
     eb_sensor_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -544,7 +575,11 @@ async def getEbStatus():
 
 @app.get("/eb/status/{item_id}", tags=["EB"], description="Get Eb Status By ID", summary="Get Eb Status By ID")
 async def getEbStatusById(item_id: int):
-    return eb_status_collections.find_one({"_id": item_id})
+    existing_eb_status = eb_status_collections.find_one({"_id": item_id})
+    if existing_eb_status is None:
+        return {"message": f"eb with ID {item_id} not found."}
+    else:
+        return eb_status_collections.find_one({"_id": item_id})
 
 @app.post("/eb/status/create", tags=["EB"], description="Create New Eb Status", summary="Create New Eb Status")
 async def createEbStatus(eb: EbStatus, request: Request):
@@ -568,7 +603,11 @@ async def getUpsVoltage():
 
 @app.get("/ups/voltage/{item_id}", tags=["EB"], description="Get Ups Voltage By ID", summary="Get Ups Voltage By ID")
 async def getUpsVoltageById(item_id: int):
-    return eb_ups_voltage_collections.find_one({"device_id": item_id})
+    existing_ups_voltage = eb_ups_voltage_collections.find_one({"_id": item_id})
+    if existing_ups_voltage is None:
+        return {"message": f"ups with ID {item_id} not found."}
+    else:
+        return eb_ups_voltage_collections.find_one({"device_id": item_id})
 
 @app.post("/ups/voltage/create", tags=["EB"], description="Create New Ups Voltage", summary="Create New Ups Voltage")
 async def createUpsVoltage(eb: UpsVoltage, request: Request):
@@ -597,7 +636,11 @@ async def getUpsAmpere():
 
 @app.get("/ups/ampere/{item_id}", tags=["EB"], description="Get Ups Ampere By ID", summary="Get Ups Ampere By ID")
 async def getUpsAmpereById(item_id: int):
-    return eb_ups_ampere_collections.find_one({"device_id": item_id})
+    existing_ups = eb_ups_ampere_collections.find_one({"_id": item_id})
+    if existing_ups is None:
+        return {"message": f"ups with ID {item_id} not found."}
+    else:
+        return eb_ups_ampere_collections.find_one({"device_id": item_id})
 
 @app.post("/ups/ampere/create", tags=["EB"], description="Create New Ups Ampere", summary="Create New Ups Ampere")
 async def createUpsAmpere(eb: UpsAmpere, request: Request):
@@ -628,7 +671,11 @@ async def getEb3():
 
 @app.get("/eb3/{item_id}", tags=["EB 3 Phase"], description="Get Eb3 By ID", summary="Get Eb3 By ID")
 async def getEb3ById(item_id: int):
-    return eb3phasae_sensor_collections.find_one({"_id": item_id})
+    existing_eb3 = eb3phasae_sensor_collections.find_one({"_id": item_id})
+    if existing_eb3 is None:
+        return {"message": f"eb3 with ID {item_id} not found."}
+    else:
+        return eb3phasae_sensor_collections.find_one({"_id": item_id})
 
 @app.post("/eb3/create", tags=["EB 3 Phase"], description="Create New Eb3", summary="Create New Eb3")
 async def createEb3(eb3: Eb3, request: Request):
@@ -658,6 +705,9 @@ async def createEb3(eb3: Eb3, request: Request):
             
 @app.put("/eb3/update/{item_id}", tags=["EB 3 Phase"], description="Update Eb3 By ID ", summary="Update Eb3 By ID ")
 def updateEb3ById(eb3: Eb3Put, item_id: int):
+    existing_eb3 = eb3phasae_sensor_collections.find_one({"_id": item_id})
+    if existing_eb3 is None:
+        return {"message": f"eb3 with ID {item_id} not found."}
     update_fields = {}
     if eb3.R_voltage is not None:
         update_fields['R_voltage'] = eb3.R_voltage
@@ -678,7 +728,7 @@ def updateEb3ById(eb3: Eb3Put, item_id: int):
     if  eb3.ups_battery_percentage is not None:
         update_fields['ups_battery_percentage'] =eb3.ups_battery_percentage
     if  eb3.status is not None:
-        update_fields['status'] =eb3.status            
+        update_fields['status'] =eb3.status
     eb3phasae_sensor_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -700,7 +750,11 @@ async def getEb3Voltage():
 
 @app.get("/eb3/voltage/{item_id}", tags=["EB 3 Phase"], description="Get Eb3 Voltage By ID", summary="Get Eb3 Voltage By ID")
 async def getEb3VoltageById(item_id: int):
-    return eb3phasae_voltage_collections.find_one({"device_id": item_id})
+    existing_eb3voltage = eb3phasae_voltage_collections.find_one({"_id": item_id})
+    if existing_eb3voltage is None:
+        return {"message": f"eb3 with ID {item_id} not found."}
+    else:
+        return eb3phasae_voltage_collections.find_one({"device_id": item_id})
 
 @app.post("/eb3/voltage/create", tags=["EB 3 Phase"], description="Create New Eb3 Voltage", summary="Create New Eb3 Voltage")
 async def createEb3Voltage(eb3: Eb3Voltage, request: Request):
@@ -725,6 +779,9 @@ async def createEb3Voltage(eb3: Eb3Voltage, request: Request):
 
 @app.put("/eb3/voltage/update/{item_id}", tags=["EB 3 Phase"], description="Update Eb3 Voltage By ID", summary="Update Eb3 Voltage By ID")
 def updateEb3VoltageById(eb3: Eb3VoltagePut, item_id: int):
+    existing_eb3voltage = eb3phasae_voltage_collections.find_one({"_id": item_id})
+    if existing_eb3voltage is None:
+        return {"message": f"eb3 with ID {item_id} not found."}
     update_fields = {}
     if eb3.r_voltage is not None:
         update_fields['r_voltage'] = eb3.r_voltage
@@ -750,7 +807,11 @@ async def getEb3Ampere():
 
 @app.get("/eb3/ampere/{item_id}", tags=["EB 3 Phase"], description="Get Eb3 Ampere By ID", summary="Get Eb3 Ampere By ID")
 async def getEb3AmpereById(item_id: int):
-    return eb3phasae_ampere_collections.find_one({"device_id": item_id})
+    existing_eb3amphere = eb3phasae_ampere_collections.find_one({"_id": item_id})
+    if existing_eb3amphere is None:
+        return {"message": f"eb3 with ID {item_id} not found."}
+    else:
+        return eb3phasae_ampere_collections.find_one({"device_id": item_id})
 
 @app.post("/eb3/ampere/create", tags=["EB 3 Phase"], description="Create New Eb3 Ampere", summary="Create New Eb3 Ampere")
 async def createEb3Ampere(eb3: Eb3Ampere, request: Request):
@@ -776,6 +837,9 @@ async def createEb3Ampere(eb3: Eb3Ampere, request: Request):
 
 @app.put("/eb3/ampere/update/{item_id}", tags=["EB 3 Phase"], description="Update Eb3 Ampere By ID", summary="Update Eb3 Ampere By ID")
 def updateEb3AmpereById(eb3: Eb3AmperePut, item_id: int):
+    existing_eb3amphere = eb3phasae_ampere_collections.find_one({"_id": item_id})
+    if existing_eb3amphere is None:
+        return {"message": f"eb3 with ID {item_id} not found."}
     update_fields = {}
     if eb3.r_ampere is not None:
         update_fields['r_ampere'] = eb3.r_ampere
@@ -801,7 +865,11 @@ async def getRoom():
 
 @app.get("/room/{item_id}", tags=["Rooms"], description="Get Room By ID", summary="Get Room By ID")
 async def getRoomById(item_id: int):
-    return room_collections.find_one({"_id": item_id})
+    existing_room = room_collections.find_one({"_id": item_id})
+    if existing_room is None:
+        return {"message": f"room with ID {item_id} not found."}
+    else:
+        return room_collections.find_one({"_id": item_id})
 
 @app.post("/room/create", tags=["Rooms"], description="Create New Room", summary="Create New Room")
 async def createRoom(room: Rooms, request: Request):
@@ -825,6 +893,9 @@ async def createRoom(room: Rooms, request: Request):
 
 @app.put("/room/update/{item_id}", tags=["Rooms"], description="Update Room By ID", summary="Update Room By ID")
 async def updateRoomById(rooms: RoomsPut, item_id: int):
+    existing_room = room_collections.find_one({"_id": item_id})
+    if existing_room is None:
+        return {"message": f"room with ID {item_id} not found."}
     update_fields = {}
     if rooms.name is not None:
         update_fields['name'] = rooms.name
@@ -835,7 +906,7 @@ async def updateRoomById(rooms: RoomsPut, item_id: int):
     if  rooms.mechanics is not None:
         update_fields['mechanics'] = rooms.mechanics
     if  rooms.motion_sensor is not None:
-        update_fields['motion_sensor'] = rooms.motion_sensor     
+        update_fields['motion_sensor'] = rooms.motion_sensor
     room_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -886,7 +957,11 @@ async def getMotionsensor():
 
 @app.get("/motionsensor/{item_id}", tags=["Motion Sensor"], description="Get Motionsensor By ID", summary="Get Motionsensor By ID")
 async def getMotionsensorById(item_id: int):
-    return motionsensor_collections.find_one({"_id": item_id})
+    existing_motion = motionsensor_collections.find_one({"_id": item_id})
+    if existing_motion is None:
+        return {"message": f"Motion sensor with ID {item_id} not found."}
+    else:
+        return motionsensor_collections.find_one({"_id": item_id})
 
 @app.post("/motionsensor/create", tags=["Motion Sensor"], description="Create New Motionsensor", summary="Create New Motionsensor")
 async def createMotionsensor(ms: MotionSensor, request: Request):
@@ -902,6 +977,9 @@ async def createMotionsensor(ms: MotionSensor, request: Request):
             
 @app.put("/motionsensor/update/{item_id}", tags=["Motion Sensor"], description="Update Motionsensor By ID", summary="Update Motionsensor By ID")
 async def updateMotionsensor(motion: MotionSensorPut, item_id: int):
+    existing_motion = motionsensor_collections.find_one({"_id": item_id})
+    if existing_motion is None:
+        return {"message": f"Motion sensor with ID {item_id} not found."}
     update_fields = {}
     if motion.ss is not None:
         update_fields['ss'] = motion.ss
@@ -910,7 +988,7 @@ async def updateMotionsensor(motion: MotionSensorPut, item_id: int):
     if  motion.off_s is not None:
         update_fields['off_s'] = motion.off_s
     if  motion.time is not None:
-        update_fields['time'] = motion.time   
+        update_fields['time'] = motion.time 
     motionsensor_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -932,7 +1010,11 @@ async def getMotionsensorDetails():
 
 @app.get("/motionsensor/details/{item_id}", tags=["Motion Sensor"], description="Get MotionSensor Details By ID", summary="Get MotionSensor Details By ID")
 async def getMotionsensorDetailsById(item_id: int):
-    return motionsensor_details_collections.find_one({"_id": item_id})
+    existing_motion = motionsensor_details_collections.find_one({"_id": item_id})
+    if existing_motion is None:
+        return {"message": f"Motion sensor with ID {item_id} not found."}
+    else:
+        return motionsensor_details_collections.find_one({"_id": item_id})
 
 @app.post("/motionsensor/details/create", tags=["Motion Sensor"], description="Create New Motionsensor Details", summary="Create New Motionsensor Details")
 async def createMotionsensorDetails(devices: MotionSensorDetails, request: Request):
@@ -950,6 +1032,9 @@ async def createMotionsensorDetails(devices: MotionSensorDetails, request: Reque
 
 @app.put("/motionsensor/details/update/{item_id}", tags=["Motion Sensor"], description="Update Motionsensor Details By ID", summary="Update Motionsensor Details By ID")
 def updateMotionsensorDetailsById(device: MotionSensorDetailsPut, item_id: int):
+    existing_motion = motionsensor_details_collections.find_one({"_id": item_id})
+    if existing_motion is None:
+        return {"message": f"Motion sensor with ID {item_id} not found."}
     update_fields = {}
     if device.device_name is not None:
         update_fields['device_name'] = device.device_name
@@ -958,7 +1043,7 @@ def updateMotionsensorDetailsById(device: MotionSensorDetailsPut, item_id: int):
     if  device.device_id is not None:
         update_fields['device_id'] = device.device_id
     if  device.type is not None:
-        update_fields['type'] = device.type   
+        update_fields['type'] = device.type 
     motionsensor_details_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -980,7 +1065,11 @@ async def getWta():
 
 @app.get("/wta/{item_id}", tags=["WTA"], description="Get WTA By ID", summary="Get WTA By ID")
 async def getWtaById(item_id: int):
-    return wta_collections.find_one({"_id": item_id})
+    existing_wta = wta_collections.find_one({"_id": item_id})
+    if existing_wta is None:
+        return {"message": f"wta with ID {item_id} not found."}
+    else:
+        return wta_collections.find_one({"_id": item_id})
 
 @app.post("/wta/create", tags=["WTA"], description="Create New WTA", summary="Create New WTA")
 async def createWta(ms: Wta, request: Request):
@@ -996,6 +1085,9 @@ async def createWta(ms: Wta, request: Request):
             
 @app.put("/wta/update/{item_id}", tags=["WTA"], description="Update WTA By ID", summary="Update WTA By ID")
 async def updateWta(wta: WtaPut, item_id: int):
+    existing_wta = wta_collections.find_one({"_id": item_id})
+    if existing_wta is None:
+        return {"message": f"wta with ID {item_id} not found."}
     update_fields = {}
     if wta.level is not None:
         update_fields['level'] = wta.level
@@ -1010,6 +1102,117 @@ async def updateWta(wta: WtaPut, item_id: int):
 @app.delete("/wta/delete/{item_id}", tags=["WTA"], description="Delete WTA By ID", summary="Delete WTA By ID")
 async def deleteWta(item_id: int):
     wta_collections.delete_one({"_id": item_id})
+    return {"msg": f"Successfully deleted item in {item_id}"}
+
+@app.get("/wta/log/all", tags=["WTA"], description="Get All wta Logs", summary="Get All wta Logs")
+async def getAllwtaLog():
+    device_list = []
+    documents = wta_details_log_collections.find()
+    for x in documents:
+        device_list.append(x)
+    return device_list
+
+@app.post("/wta/log/create", tags=["WTA"], description="Create New wta Log", summary="Create New wta Log")
+async def createwtaLog(devices: Log, request: Request):
+    try:
+        wta_details_log_collections.insert_one(
+            {
+                "_id": time.time(),
+                "device_id": devices.device_id,
+                "status": devices.status,
+                "timestamp": devices.timestamp,
+                "updated_by": devices.updated_by
+            }
+        )
+        return {"msg": "log created", "created_data": devices, "client": request.client}
+    except:
+        documents = wta_details_log_collections.find()
+        for document in documents:
+            id = document["device_id"]
+            if id == devices.device_id:
+                return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
+    
+@app.get("/wta/boardlog/all", tags=["WTA"], description="Get All wta Board Logs", summary="Get All wta Board Logs")
+async def getAllBoardLog():
+    device_list = []
+    documents = wta_board_log_collections.find()
+    for x in documents:
+        device_list.append(x)
+    return device_list
+
+@app.post("/wta/boardlog/create", tags=["WTA"], description="Create New wta Board Log", summary="Create New wta Board Log")
+async def createwtaBoardLog(devices: Log, request: Request):
+    try:
+        wta_board_log_collections.insert_one(
+            {
+                "_id": time.time(),
+                "device_id": devices.device_id,
+                "status": devices.status,
+                "timestamp": devices.timestamp,
+                "updated_by": devices.updated_by
+            }
+        )
+        return {"msg": "log created", "created_data": devices, "client": request.client}
+    except:
+        documents = wta_board_log_collections.find()
+        for document in documents:
+            id = document["device_id"]
+            if id == devices.device_id:
+                return {"msg": {f"id {devices.device_id} already exist in devices log, try using other id"}}
+            
+@app.get("/wta/details/all", tags=["WTA"], description="Get All wta Details", summary="Get All wta Details")
+async def getwtaDetails():
+    list = []
+    documents = wta_details_collections.find()
+    for document in documents:
+        list.append(document)
+    return list
+
+@app.get("/wta/details/{item_id}", tags=["WTA"], description="Get wta Details By ID", summary="Get wta Details By ID")
+async def getwtaDetailsById(item_id: int):
+    existing_motion = wta_details_collections.find_one({"_id": item_id})
+    if existing_motion is None:
+        return {"message": f"wta with ID {item_id} not found."}
+    else:
+        return wta_details_collections.find_one({"_id": item_id})
+
+@app.post("/wta/details/create", tags=["WTA"], description="Create New wta Details", summary="Create New wta Details")
+async def createwtaDetails(devices: wtaDetails, request: Request):
+    try:
+        wta_details_collections.insert_one(
+            {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
+             "type": devices.type})
+        return {"msg": "created successfully", "created_data": devices, "client": request.client}
+    except:
+        documents = wta_details_collections.find()
+        for document in documents:
+            id = document["_id"]
+            if id == devices.id:
+                return {"msg": {f"id {devices.id} already exist in devices, try using other id"}}
+
+@app.put("/wta/details/update/{item_id}", tags=["WTA"], description="Update wta Details By ID", summary="Update wta Details By ID")
+def updatewtaDetailsById(device: wtaDetailsPut, item_id: int):
+    existing_motion = wta_details_collections.find_one({"_id": item_id})
+    if existing_motion is None:
+        return {"message": f"wta with ID {item_id} not found."}
+    update_fields = {}
+    if device.device_name is not None:
+        update_fields['device_name'] = device.device_name
+    if device.room is not None:
+        update_fields['room'] = device.room
+    if  device.device_id is not None:
+        update_fields['device_id'] = device.device_id
+    if  device.type is not None:
+        update_fields['type'] = device.type 
+    wta_details_collections.update_one(
+        {"_id": item_id},
+        {"$set": update_fields}
+    )
+    return {"msg": f"updated device id {item_id} to {update_fields}"}
+    
+@app.delete("/wta/details/delete/{item_id}", tags=["WTA"], description="Delete wta Details By ID", summary="Delete wta Details By ID")
+async def deletewtaDetailsById(item_id: int):
+    wta_details_collections.delete_one({"_id": item_id})
     return {"msg": f"Successfully deleted item in {item_id}"}
 
 if __name__ == "__main__":
