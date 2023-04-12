@@ -25,7 +25,10 @@ async def getDeviceById(item_id: int):
 @app.post("/device/create", tags=["Devices"], description="Create New Device", summary="Create New Device" )
 async def createDevice(devices: Devices, request: Request):
     try:
-        device_collections.insert_one({"_id": devices.id, "status": devices.status})
+        device_collections.insert_one({
+            "_id": devices.id,
+            "status": devices.status
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = device_collections.find()
@@ -41,7 +44,7 @@ def updateDeviceById(device: DevicesPut, item_id: int):
         return {"message": f"device with ID {item_id} not found."}
     update_fields = {}
     if  device.status is not None:
-        update_fields['status'] =device.status
+        update_fields['status'] = device.status
     device_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
@@ -78,7 +81,7 @@ async def createDeviceDetails(devices: DeviceDetails, request: Request):
     try:
         device_detail_collections.insert_one({
             "_id": devices.id,
-            "name": devices.device_name,
+            "device_name": devices.device_name,
             "room": devices.room,
             "device_id": devices.device_id,
             "type": devices.type
@@ -111,15 +114,13 @@ async def getAllDeviceLog():
 @app.post("/device/log/create", tags=["Devices"], description="Create New Device Log", summary="Create New Device Log")
 async def createDeviceLog(devices: Log, request: Request):
     try:
-        device_details_log_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": devices.device_id,
-                "status": devices.status,
-                "timestamp": devices.timestamp,
-                "updated_by": devices.updated_by
-            }
-        )
+        device_details_log_collections.insert_one({
+            "_id": time.time(),
+            "device_id": devices.device_id,
+            "status": devices.status,
+            "timestamp": devices.timestamp,
+            "updated_by": devices.updated_by
+        })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
         documents = device_details_log_collections.find()
@@ -139,15 +140,13 @@ async def getAllBoardLog():
 @app.post("/device/boardlog/create", tags=["Devices"], description="Create New Device Board Log", summary="Create New Device Board Log")
 async def createDeviceBoardLog(devices: Log, request: Request):
     try:
-        device_board_log_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": devices.device_id,
-                "status": devices.status,
-                "timestamp": devices.timestamp,
-                "updated_by": devices.updated_by
-            }
-        )
+        device_board_log_collections.insert_one({
+            "_id": time.time(),
+            "device_id": devices.device_id,
+            "status": devices.status,
+            "timestamp": devices.timestamp,
+            "updated_by": devices.updated_by
+        })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
         documents = device_board_log_collections.find()
@@ -228,15 +227,13 @@ async def getFanDetailsById(item_id: int):
 @app.post("/fan/details/create", tags=["Fan"], description="Create New Fan Details", summary="Create New Fan Details")
 async def createFanDetails(devices: FanDetails, request: Request):
     try:
-        fan_details_collections.insert_one(
-            {
-                "_id": devices.id,
-                "name": devices.device_name,
-                "room": devices.room,
-                "device_id": devices.device_id,
-                "type": devices.type
-            }
-        )
+        fan_details_collections.insert_one({
+            "_id": devices.id,
+            "device_name": devices.device_name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = fan_details_collections.find()
@@ -265,15 +262,13 @@ async def getFanLog():
 @app.post("/fan/log/create", tags=["Fan"], description="Create New Fan Log", summary="Create New Fan Log")
 async def createFanLog(devices: Log, request: Request):
     try:
-        fan_details_log_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": devices.device_id,
-                "status": devices.status,
-                "timestamp": devices.timestamp,
-                "updated_by": devices.updated_by
-            }
-        )
+        fan_details_log_collections.insert_one({
+            "_id": time.time(),
+            "device_id": devices.device_id,
+            "status": devices.status,
+            "timestamp": devices.timestamp,
+            "updated_by": devices.updated_by
+        })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
         documents = fan_details_log_collections.find()
@@ -293,15 +288,13 @@ async def getFanBoardLog():
 @app.post("/fan/boardlog/create", tags=["Fan"], description="Create New Fan Board Log", summary="Create New Fan Board Log")
 async def createFanBoardLog(devices: Log, request: Request):
     try:
-        fan_board_log_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": devices.device_id,
-                "status": devices.status,
-                "timestamp": devices.timestamp,
-                "updated_by": devices.updated_by
-            }
-        )
+        fan_board_log_collections.insert_one({
+            "_id": time.time(),
+            "device_id": devices.device_id,
+            "status": devices.status,
+            "timestamp": devices.timestamp,
+            "updated_by": devices.updated_by
+        })
         return {"msg": "log created", "created_data": devices, "client": request.client}
     except:
         documents = fan_board_log_collections.find()
@@ -392,7 +385,7 @@ async def getLedDetailsById(item_id: int):
 async def getLedDetails(devices: LedDetails, request: Request):
     try:
         led_details_collections.insert_one(
-            {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
+            {"_id": devices.id, "device_name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
              "type": devices.type})
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
@@ -505,7 +498,7 @@ async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
     try:
         mechanics_details_collections.insert_one({
             "_id": devices.id,
-            "name": devices.device_name,
+            "device_name": devices.device_name,
             "room": devices.room,
             "device_id": devices.device_id,
             "type": devices.type
@@ -568,17 +561,15 @@ async def getEbById(item_id: int):
 @app.post("/eb/create", tags=["EB"], description="Create New Eb", summary="Create New Eb")
 async def createEb(eb: Eb, request: Request):
     try:
-        eb_sensor_collections.insert_one(
-            {
-                "_id": eb.id,
-                "voltage": eb.voltage,
-                "amp": eb.amp,
-                "ups_voltage": eb.ups_voltage,
-                "ups_amp": eb.ups_AMP,
-                "status": eb.status,
-                "ups_battery_percentages": eb.ups_battery_percentage
-            }
-        )
+        eb_sensor_collections.insert_one({
+            "_id": eb.id,
+            "voltage": eb.voltage,
+            "amp": eb.amp,
+            "ups_voltage": eb.ups_voltage,
+            "ups_amp": eb.ups_AMP,
+            "status": eb.status,
+            "ups_battery_percentages": eb.ups_battery_percentage
+        })
         return {"msg": "created successfully", "created_data": eb, "client": request.client}
     except:
         documents = eb_sensor_collections.find()
@@ -639,7 +630,11 @@ async def getEbStatusById(item_id: int):
 @app.post("/eb/status/create", tags=["EB"], description="Create New Eb Status", summary="Create New Eb Status")
 async def createEbStatus(eb: EbStatus, request: Request):
     try:
-        eb_status_collections.insert_one({"_id": eb.id, "status": eb.status, "time_stamp": eb.time_stamp})
+        eb_status_collections.insert_one({
+            "_id": eb.id,
+            "status": eb.status,
+            "time_stamp": eb.time_stamp
+        })
         return {"msg": "created successfully", "created_data": eb, "client": request.client}
     except:
         documents = eb_status_collections.find()
@@ -700,14 +695,12 @@ async def getUpsAmpereById(item_id: int):
 @app.post("/ups/ampere/create", tags=["EB"], description="Create New Ups Ampere", summary="Create New Ups Ampere")
 async def createUpsAmpere(eb: UpsAmpere, request: Request):
     try:
-        eb_ups_ampere_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": eb.device_id,
-                "ampere": eb.ampere,
-                "time_stamp": eb.time_stamp
-            }
-        )
+        eb_ups_ampere_collections.insert_one({
+            "_id": time.time(),
+            "device_id": eb.device_id,
+            "ampere": eb.ampere,
+            "time_stamp": eb.time_stamp
+        })
         return {"msg": "created successfully", "created_data": eb, "client": request.client}
     except:
         documents = eb_ups_ampere_collections.find()
@@ -735,21 +728,19 @@ async def getEb3ById(item_id: int):
 @app.post("/eb3/create", tags=["EB 3 Phase"], description="Create New Eb3", summary="Create New Eb3")
 async def createEb3(eb3: Eb3, request: Request):
     try:
-        eb3phasae_sensor_collections.insert_one(
-            {
-                "_id": eb3.id,
-                "R_voltage": eb3.R_voltage,
-                "Y_voltage": eb3.Y_voltage,
-                "B_voltage": eb3.B_voltage,
-                "R_amp": eb3.R_amp,
-                "Y_amp": eb3.Y_amp,
-                "B_amp": eb3.B_amp,
-                "ups_voltage": eb3.ups_voltage,
-                "ups_AMP": eb3.ups_AMP,
-                "ups_battery_percentage": eb3.ups_battery_percentage,
-                "status": eb3.status
-            }
-        )
+        eb3phasae_sensor_collections.insert_one({
+            "_id": eb3.id,
+            "R_voltage": eb3.R_voltage,
+            "Y_voltage": eb3.Y_voltage,
+            "B_voltage": eb3.B_voltage,
+            "R_amp": eb3.R_amp,
+            "Y_amp": eb3.Y_amp,
+            "B_amp": eb3.B_amp,
+            "ups_voltage": eb3.ups_voltage,
+            "ups_AMP": eb3.ups_AMP,
+            "ups_battery_percentage": eb3.ups_battery_percentage,
+            "status": eb3.status
+        })
         return {"msg": "created successfully", "created_data": eb3, "client": request.client}
     except:
         documents = eb3phasae_sensor_collections.find()
@@ -818,16 +809,14 @@ async def getEb3VoltageById(item_id: int):
 @app.post("/eb3/voltage/create", tags=["EB 3 Phase"], description="Create New Eb3 Voltage", summary="Create New Eb3 Voltage")
 async def createEb3Voltage(eb3: Eb3Voltage, request: Request):
     try:
-        eb3phasae_voltage_collections.insert_one(
-            {
-                "_id": time.time(), 
-                "device_id": eb3.device_id,
-                "r_voltage": eb3.r_voltage,
-                "y_voltage": eb3.y_voltage,
-                "b_voltage": eb3.b_voltage,
-                "time_stamp": eb3.time_stamp
-            }
-        )
+        eb3phasae_voltage_collections.insert_one({
+            "_id": time.time(),
+            "device_id": eb3.device_id,
+            "r_voltage": eb3.r_voltage,
+            "y_voltage": eb3.y_voltage,
+            "b_voltage": eb3.b_voltage,
+            "time_stamp": eb3.time_stamp
+        })
         return {"msg": "created successfully", "created_data": eb3, "client": request.client}
     except:
         documents = eb3phasae_voltage_collections.find()
@@ -875,16 +864,14 @@ async def getEb3AmpereById(item_id: int):
 @app.post("/eb3/ampere/create", tags=["EB 3 Phase"], description="Create New Eb3 Ampere", summary="Create New Eb3 Ampere")
 async def createEb3Ampere(eb3: Eb3Ampere, request: Request):
     try:
-        eb3phasae_ampere_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": eb3.device_id,
-                "r_ampere": eb3.r_ampere,
-                "y_ampere": eb3.y_ampere,
-                "b_ampere": eb3.b_ampere,
-                "time_stamp": eb3.time_stamp
-            }
-        )
+        eb3phasae_ampere_collections.insert_one({
+            "_id": time.time(),
+            "device_id": eb3.device_id,
+            "r_ampere": eb3.r_ampere,
+            "y_ampere": eb3.y_ampere,
+            "b_ampere": eb3.b_ampere,
+            "time_stamp": eb3.time_stamp
+        })
 
         return {"msg": "created successfully", "created_data": eb3, "client": request.client}
     except:
@@ -992,16 +979,14 @@ async def getTemp():
 @app.post("/temp/create", tags=["Temperature"], description="Create New Temp", summary="Create New Temp")
 async def createTemp(temp: Temperature, request: Request):
     try:
-        temp_collections.insert_one(
-            {
-                "_id": time.time(),
-                "device_id": temp.device_id,
-                "room": temp.room,
-                "temperature": temp.temperature,
-                "humidity": temp.humidity,
-                "timestamp": temp.timestamp
-            }
-        )
+        temp_collections.insert_one({
+            "_id": time.time(),
+            "device_id": temp.device_id,
+            "room": temp.room,
+            "temperature": temp.temperature,
+            "humidity": temp.humidity,
+            "timestamp": temp.timestamp
+        })
         return {"msg": "created successfully", "created_data": temp, "client": request.client}
     except:
         documents = temp_collections.find()
@@ -1029,7 +1014,15 @@ async def getMotionsensorById(item_id: int):
 @app.post("/motionsensor/create", tags=["Motion Sensor"], description="Create New Motionsensor", summary="Create New Motionsensor")
 async def createMotionsensor(ms: MotionSensor, request: Request):
     try:
-        motionsensor_collections.insert_one({"_id": ms.id, "ss": ms.ss, "on_s": ms.on_s, "off_s": ms.off_s, "time": ms.time})
+        motionsensor_collections.insert_one(
+            {
+                "_id": ms.id,
+                "ss": ms.ss,
+                "on_s": ms.on_s,
+                "off_s": ms.off_s,
+                "time": ms.time
+            }
+        )
         return {"msg": "created successfully", "created_data": ms, "client": request.client}
     except:
         documents = motionsensor_collections.find()
@@ -1087,7 +1080,7 @@ async def getMotionsensorDetailsById(item_id: int):
 async def createMotionsensorDetails(devices: MotionSensorDetails, request: Request):
     try:
         motionsensor_details_collections.insert_one(
-            {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
+            {"_id": devices.id, "device_name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
              "type": devices.type})
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
@@ -1255,8 +1248,14 @@ async def getwtaDetailsById(item_id: int):
 async def createwtaDetails(devices: wtaDetails, request: Request):
     try:
         wta_details_collections.insert_one(
-            {"_id": devices.id, "name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+            {
+                "_id": devices.id,
+                "device_name": devices.device_name,
+                "room": devices.room,
+                "device_id": devices.device_id,
+                "type": devices.type
+            }
+        )
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = wta_details_collections.find()
