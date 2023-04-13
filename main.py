@@ -108,7 +108,7 @@ def updateDeviceDetailsById(device: DevicesDetailsPut, item_id: int):
         update_fields['device_id'] = device.device_id
     if  device.type is not None:
         update_fields['type'] = device.type 
-    wta_details_collections.update_one(
+    device_detail_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
     )
@@ -276,7 +276,7 @@ def updateFanDetailsById(device: FanDetailsPut, item_id: int):
         update_fields['device_id'] = device.device_id
     if  device.type is not None:
         update_fields['type'] = device.type 
-    wta_details_collections.update_one(
+    fan_details_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
     )
@@ -453,7 +453,7 @@ def updateLedDetailsById(device: LedDetailsPut, item_id: int):
         update_fields['device_id'] = device.device_id
     if  device.type is not None:
         update_fields['type'] = device.type 
-    wta_details_collections.update_one(
+    led_details_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
     )
@@ -577,7 +577,7 @@ async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
 
 @app.put("/mechanics/details/update/{item_id}", tags=["Mechanics"], description="Update Mechanics Details By ID", summary="Update Mechanics Details By ID")
 def updateMechanicsDetailsById(device: MechanicsDetailsPut, item_id: int):
-    existing_led = led_details_collections.find_one({"_id": item_id})
+    existing_led = mechanics_details_collections.find_one({"_id": item_id})
     if existing_led is None:
         return {"message": f"Fan with ID {item_id} not found."}
     update_fields = {}
@@ -589,7 +589,7 @@ def updateMechanicsDetailsById(device: MechanicsDetailsPut, item_id: int):
         update_fields['device_id'] = device.device_id
     if  device.type is not None:
         update_fields['type'] = device.type 
-    wta_details_collections.update_one(
+    mechanics_details_collections.update_one(
         {"_id": item_id},
         {"$set": update_fields}
     )
