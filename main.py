@@ -81,7 +81,7 @@ async def createDeviceDetails(devices: DeviceDetails, request: Request):
     try:
         device_detail_collections.insert_one({
             "_id": devices.id,
-            "device_name": devices.device_name,
+            "name": devices.name,
             "room": devices.room,
             "device_id": devices.device_id,
             "type": devices.type
@@ -229,7 +229,7 @@ async def createFanDetails(devices: FanDetails, request: Request):
     try:
         fan_details_collections.insert_one({
             "_id": devices.id,
-            "device_name": devices.device_name,
+            "name": devices.name,
             "room": devices.room,
             "device_id": devices.device_id,
             "type": devices.type
@@ -384,9 +384,13 @@ async def getLedDetailsById(item_id: int):
 @app.post("/led/details/create", tags=["LED"], description="Create New Led Details", summary="Create New Led Details")
 async def getLedDetails(devices: LedDetails, request: Request):
     try:
-        led_details_collections.insert_one(
-            {"_id": devices.id, "device_name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+        led_details_collections.insert_one({
+            "_id": devices.id,
+            "name": devices.name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = led_details_collections.find()
@@ -498,7 +502,7 @@ async def createMechanicsDetails(devices: MechanicsDetails, request: Request):
     try:
         mechanics_details_collections.insert_one({
             "_id": devices.id,
-            "device_name": devices.device_name,
+            "name": devices.name,
             "room": devices.room,
             "device_id": devices.device_id,
             "type": devices.type
@@ -1079,9 +1083,13 @@ async def getMotionsensorDetailsById(item_id: int):
 @app.post("/motionsensor/details/create", tags=["Motion Sensor"], description="Create New Motionsensor Details", summary="Create New Motionsensor Details")
 async def createMotionsensorDetails(devices: MotionSensorDetails, request: Request):
     try:
-        motionsensor_details_collections.insert_one(
-            {"_id": devices.id, "device_name": devices.device_name, "room": devices.room, "device_id": devices.device_id,
-             "type": devices.type})
+        motionsensor_details_collections.insert_one({
+            "_id": devices.id,
+            "name": devices.name,
+            "room": devices.room,
+            "device_id": devices.device_id,
+            "type": devices.type
+        })
         return {"msg": "created successfully", "created_data": devices, "client": request.client}
     except:
         documents = motionsensor_details_collections.find()
@@ -1096,8 +1104,8 @@ def updateMotionsensorDetailsById(device: MotionSensorDetailsPut, item_id: int):
     if existing_motion is None:
         return {"message": f"Motion sensor with ID {item_id} not found."}
     update_fields = {}
-    if device.device_name is not None:
-        update_fields['device_name'] = device.device_name
+    if device.name is not None:
+        update_fields['name'] = device.name
     if device.room is not None:
         update_fields['room'] = device.room
     if  device.device_id is not None:
@@ -1250,7 +1258,7 @@ async def createwtaDetails(devices: wtaDetails, request: Request):
         wta_details_collections.insert_one(
             {
                 "_id": devices.id,
-                "device_name": devices.device_name,
+                "name": devices.name,
                 "room": devices.room,
                 "device_id": devices.device_id,
                 "type": devices.type
@@ -1270,8 +1278,8 @@ def updatewtaDetailsById(device: wtaDetailsPut, item_id: int):
     if existing_wta is None:
         return {"message": f"wta with ID {item_id} not found."}
     update_fields = {}
-    if device.device_name is not None:
-        update_fields['device_name'] = device.device_name
+    if device.name is not None:
+        update_fields['name'] = device.name
     if device.room is not None:
         update_fields['room'] = device.room
     if  device.device_id is not None:

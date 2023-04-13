@@ -11,7 +11,7 @@ class DevicesPut(BaseModel):
 class DeviceDetails(BaseModel):
     id: int
     device_id: int
-    device_name: str
+    name: str
     room: str
     type: str
 
@@ -33,7 +33,7 @@ class FanPut(BaseModel):
 class FanDetails(BaseModel):
     id: int
     device_id: int
-    device_name: str
+    name: str
     room: str
     type: str
 
@@ -55,7 +55,7 @@ class LedPut(BaseModel):
 class LedDetails(BaseModel):
     id: int
     device_id: int
-    device_name: str
+    name: str
     room: str
     type: str
 
@@ -69,7 +69,7 @@ class MechanicsPut(BaseModel):
 class MechanicsDetails(BaseModel):
     id: int
     device_id: int
-    device_name: str
+    name: str
     room: str
     type: str
 
@@ -204,13 +204,13 @@ class MotionSensorPut(BaseModel):
 class MotionSensorDetails(BaseModel):
     id: int
     device_id: int
-    device_name: str
+    name: str
     room: str
     type: str
 
 class MotionSensorDetailsPut(BaseModel):
     device_id: Optional[int]
-    device_name: Optional[str]
+    name: Optional[str]
     room: Optional[str]
     type: Optional[str]
 
@@ -226,12 +226,12 @@ class WtaPut(BaseModel):
 class wtaDetails(BaseModel):
     id: int
     device_id: int
-    device_name: str
+    name: str
     room: str
     type: str
 
 class wtaDetailsPut(BaseModel):
     device_id: Optional[int]
-    device_name: Optional[str]
+    name: Optional[str]
     room: Optional[str]
     type: Optional[str]
