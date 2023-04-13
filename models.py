@@ -37,6 +37,12 @@ class FanDetails(BaseModel):
     room: str
     type: str
 
+class FanDetailsPut(BaseModel):
+    device_id: Optional[int]
+    name: Optional[str]
+    room: Optional[str]
+    type: Optional[str]
+
 class Led(BaseModel):
     id: int
     brightness: str
@@ -59,6 +65,12 @@ class LedDetails(BaseModel):
     room: str
     type: str
 
+class LedDetailsPut(BaseModel):
+    device_id: Optional[int]
+    name: Optional[str]
+    room: Optional[str]
+    type: Optional[str]
+
 class Mechanics(BaseModel):
     id: int
     values: str
@@ -72,6 +84,12 @@ class MechanicsDetails(BaseModel):
     name: str
     room: str
     type: str
+
+class MechanicsDetailsPut(BaseModel):
+    device_id: Optional[int]
+    name: Optional[str]
+    room: Optional[str]
+    type: Optional[str]
 
 class Eb(BaseModel):
     id: int
