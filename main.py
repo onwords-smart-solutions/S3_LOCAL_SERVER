@@ -378,7 +378,7 @@ def updateLedById(led: LedPut, item_id: int):
         return {"message": f"led with ID {item_id} not found."}
     update_fields = {}
     if  led.brightness is not None:
-        update_fields['values'] =led.brightness
+        update_fields['brightness'] =led.brightness
     if  led.status is not None:
         update_fields['status'] =led.status
     if  led.R is not None:
