@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from typing import List
 
 class Devices(BaseModel):
     id: int
@@ -178,20 +179,20 @@ class Eb3AmperePut(BaseModel):
 class Rooms(BaseModel):
     id: int
     name: str
-    devices: list[int]
-    fan: list[int]
-    led: list[int]
-    mechanics: list[int]
-    motion_sensor: list[int]
-    wta: list[int]
+    devices: List[int]
+    fan: List[int]
+    led: List[int]
+    mechanics: List[int]
+    motion_sensor: List[int]
+    wta: List[int]
 
 class RoomsPut(BaseModel):
     name: Optional[str]
-    devices: Optional[list[int]]
-    fan: Optional[list[int]]
-    led: Optional[list[int]]
-    mechanics: Optional[list[int]]
-    motion_sensor: Optional[list[int]]
+    devices: Optional[List[int]]
+    fan: Optional[List[int]]
+    led: Optional[List[int]]
+    mechanics: Optional[List[int]]
+    motion_sensor: Optional[List[int]]
 
 class Temperature(BaseModel):
     device_id: int

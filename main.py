@@ -1,10 +1,9 @@
-import time
+import time, uvicorn
 from fastapi import FastAPI, Request
 from models import *
 from mongo import *
-import uvicorn
 
-app = FastAPI(title="Onwords Local Smart Home Server", docs_url="/admin", redoc_url="/document")
+app = FastAPI(title="Onwords Local Smart Home Server", docs_url="/")
 
 @app.get("/device/all", tags=["Devices"], description="Get All Devices", summary="Get All Devices")
 async def getAllDevices():
